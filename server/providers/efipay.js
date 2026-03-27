@@ -46,7 +46,7 @@ function buildAgent() {
   return _agent;
 }
 
-async function getAccessToken() {
+export async function getAccessToken() {
   const c = cfg.efipay;
   const now = Date.now();
   if (_token && now < _tokenExpires) return _token;
@@ -84,7 +84,7 @@ function client() {
   const agent = buildAgent();
   return {
     async request(method, path, data) {
-      const token = await getToken();
+      const token = await getAccessToken();
       const res = await axios({
         method,
         url: cfg.efipay.baseUrl() + path,
