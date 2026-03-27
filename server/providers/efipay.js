@@ -18,10 +18,18 @@ let _agent = null;        // reutiliza https.Agent (evita re-leitura do cert)
 function buildAgent() {
   if (_agent) return _agent;
   const c = cfg.efipay;
-  if (!fs.existsSync(c.certPath)) {
-    throw new Error(`[EfiPay] Certificado não encontrado: ${c.certPath}. Gere em https://app.sejaefi.com.br → API → Certificados.`);
+  let pfx;
+
+  if (c.certBase64) {
+    console.log('[EfiPay] Usando certificado de variável de ambiente (base64)');
+    pfx = Buffer.from(c.certBase64, 'base64');
+  } else {
+    if (!fs.existsSync(c.certPath)) {
+      throw new Error(`[EfiPay] Certificado não encontrado: ${c.certPath}. Configure via SuperAdmin ou use EFIPAY_CERT_BASE64.`);
+    }
+    pfx = fs.readFileSync(c.certPath);
   }
-  const pfx = fs.readFileSync(c.certPath);
+
   _agent = new https.Agent({ pfx, passphrase: c.certPass, rejectUnauthorized: true });
   return _agent;
 }

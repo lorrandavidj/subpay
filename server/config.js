@@ -17,7 +17,8 @@ export const cfg = {
     clientId:     process.env.EFIPAY_CLIENT_ID,
     clientSecret: process.env.EFIPAY_CLIENT_SECRET,
     pixKey:       process.env.EFIPAY_PIX_KEY,
-    certPath:     process.env.EFIPAY_CERT_PATH || './certs/efipay-homolog.p12',
+    certPath:     process.env.EFIPAY_CERT_PATH || './certs/efipay.p12',
+    certBase64:   process.env.EFIPAY_CERT_BASE64 || '',
     certPass:      process.env.EFIPAY_CERT_PASS || '',
     sandbox:      process.env.EFIPAY_ENV !== 'production',
     baseUrl() {
