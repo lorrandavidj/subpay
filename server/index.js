@@ -89,6 +89,12 @@ app.get('/api/products', async (req, res) => {
   res.json(await db.getProducts());
 });
 
+app.get('/api/products/:id', async (req, res) => {
+  const prod = await db.getProduct(req.params.id);
+  if (!prod) return res.status(404).json({ error: 'Produto não encontrado' });
+  res.json(prod);
+});
+
 app.post('/api/products', async (req, res) => {
   await db.saveProduct(req.body);
   res.json({ ok: true });

@@ -213,14 +213,49 @@
 <script>
   Theme.init();
 
-  // ── Configuração do produto (em produção vem via query string / API) ────────
-  const PRODUCT = {
-    id:          new URLSearchParams(location.search).get('product') || 'prod-001',
-    name:        'Curso de Marketing Digital Completo',
-    amount:      297.00,
-    description: 'Curso de Marketing Digital — PayZap',
-    expiresIn:   1800, // 30 minutos
+  // ── Configuração do produto (carregada via API) ─────────────────────────────
+  let PRODUCT = {
+    id:          new URLSearchParams(location.search).get('p') || new URLSearchParams(location.search).get('product') || 'prod-001',
+    name:        'Carregando...',
+    amount:      0,
+    description: '',
+    expiresIn:   1800,
   };
+
+  async function initCheckout() {
+    try {
+      const res = await fetch('/api/products/' + PRODUCT.id);
+      if (!res.ok) throw new Error('Produto não encontrado');
+      const data = await res.json();
+      
+      PRODUCT = {
+        ...PRODUCT,
+        name: data.nome,
+        amount: data.valor,
+        description: data.desc || data.nome,
+        emoji: data.emoji || '🚀'
+      };
+
+      // Atualiza UI
+      document.querySelector('.brand-logo').textContent = PRODUCT.emoji;
+      document.querySelector('.brand-name').textContent = PRODUCT.vendedor ? 'Vendido por ' + PRODUCT.vendedor.split('@')[0] : 'PayZap Store';
+      document.querySelector('.brand-product').textContent = PRODUCT.name;
+      
+      document.querySelectorAll('.price-value').forEach(el => el.textContent = fmt(PRODUCT.amount));
+      document.querySelector('.product-emoji').textContent = PRODUCT.emoji;
+      document.querySelector('.product-title').textContent = PRODUCT.name;
+      document.querySelector('.product-desc').textContent = PRODUCT.description;
+      
+      // Atualiza textos de instrução
+      document.querySelector('.pix-steps .pix-step:last-child strong').textContent = fmt(PRODUCT.amount);
+
+    } catch (err) {
+      console.error(err);
+      showToast('Erro ao carregar produto', 'error');
+    }
+  }
+
+  initCheckout();
 
   const TOTAL_SECONDS = PRODUCT.expiresIn;
   let secondsLeft = TOTAL_SECONDS;
@@ -235,18 +270,11 @@
     const email = document.getElementById('co-email').value.trim();
     const cpf   = document.getElementById('co-cpf').value.trim();
 
-    document.getElementById('co-email').classList.remove('input-error');
-    document.getElementById('co-cpf').classList.remove('input-error');
-
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      document.getElementById('co-email').classList.add('input-error');
-      document.getElementById('co-email').focus();
       showToast('Informe um e-mail válido', 'error');
       return;
     }
     if (!cpf || cpf.replace(/\D/g,'').length < 11) {
-      document.getElementById('co-cpf').classList.add('input-error');
-      document.getElementById('co-cpf').focus();
       showToast('Informe seu CPF para continuar', 'error');
       return;
     }
@@ -264,6 +292,7 @@
         description: PRODUCT.description,
         externalId:  PRODUCT.id + '-' + Date.now(),
         expiresIn:   PRODUCT.expiresIn,
+        productId:   PRODUCT.id, // Envia o ID para o backend vincular ao vendedor
       });
 
       activeChargeId = charge.chargeId;

@@ -41,6 +41,10 @@ export const db = {
 
   // PRODUCTS
   async getProducts() { return await read('products'); },
+  async getProduct(id) {
+    const prods = await read('products');
+    return prods.find(p => p.id === id);
+  },
   async saveProduct(prod) {
     const prods = await read('products');
     const idx = prods.findIndex(p => p.id === prod.id);

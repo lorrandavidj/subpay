@@ -21,7 +21,7 @@ const router = Router();
 // }
 router.post('/', async (req, res) => {
   try {
-    const { amount, name, cpf, email, description, externalId, expiresIn } = req.body;
+    const { amount, name, cpf, email, description, externalId, expiresIn, productId } = req.body;
 
     if (!amount || isNaN(amount) || amount <= 0) {
       return res.status(400).json({ error: 'amount inválido' });
@@ -39,10 +39,17 @@ router.post('/', async (req, res) => {
       expiresIn: expiresIn || 3600,
     });
 
+    // Busca o vendedor real do produto se houver productId
+    let vendorEmail = email; // Fallback
+    if (productId) {
+      const prod = await db.getProduct(productId);
+      if (prod && prod.vendedor) vendorEmail = prod.vendedor;
+    }
+
     // Salva no DB local para o dashboard
     await db.saveTransaction({
       id: charge.chargeId,
-      vendedor: email, // Usando email como chave de vendedor simplificada
+      vendedor: vendorEmail,
       nome: name,
       cpf,
       email,

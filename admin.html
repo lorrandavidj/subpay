@@ -409,7 +409,9 @@ async function loadData() {
     MY_TXNS.push(...myTxns);
 
     PRODUCTS.length = 0;
-    PRODUCTS.push(...prods);
+    // Filtra produtos deste vendedor
+    const myProds = prods.filter(p => p.vendedor === user.email);
+    PRODUCTS.push(...myProds);
 
     // Atualiza KPIs
     const totalRevenue = myTxns.filter(t => t.status === 'pago').reduce((acc, t) => acc + t.valor, 0);
@@ -570,8 +572,8 @@ function renderProducts() {
         <div class="product-name">${p.nome}</div>
         <div class="product-price">${fmt(p.valor)}<span style="font-size:13px;color:var(--text3);font-family:var(--font-body);font-weight:400"> / ${p.tipo}</span></div>
         <div class="product-link-row">
-          <span class="product-link-text">pay.payzap.com/p/${p.id}</span>
-          <span class="product-link-copy" onclick="copyToClipboard('pay.payzap.com/p/${p.id}','Link copiado!')">Copiar</span>
+          <span class="product-link-text">${window.location.host}/checkout.html?p=${p.id}</span>
+          <span class="product-link-copy" onclick="copyToClipboard('${window.location.origin}/checkout.html?p=${p.id}','Link copiado!')">Copiar</span>
         </div>
         <div class="product-stats">
           <div><strong>${p.vendas}</strong> vendas</div>
@@ -594,7 +596,19 @@ async function createProduct() {
   const emoji = ['🎓','🚀','🎨','💡','🔥','⭐'][Math.floor(Math.random()*6)];
   if (!nome || !valor) { showToast('Preencha nome e valor','error'); return; }
   
-  const newProd = { id:'prod-' + randomId(''), nome, desc, valor, tipo, foto, vendas:0, total:0, emoji };
+  const user = Session.get();
+  const newProd = { 
+    id: 'prod-' + randomId(''), 
+    vendedor: user.email,
+    nome, 
+    desc, 
+    valor, 
+    tipo, 
+    foto, 
+    vendas: 0, 
+    total: 0, 
+    emoji 
+  };
   
   try {
     await fetch('/api/products', {
