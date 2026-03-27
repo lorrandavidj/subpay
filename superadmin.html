@@ -886,6 +886,7 @@
   </div>
 </div>
 
+<script src="assets/gateway.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/charts.js"></script>
 <script>
@@ -1167,6 +1168,16 @@ async function loadConfig() {
       // Se carregou o provedor ativo, atualiza os badges visuais
       if (data.config['sa-active-provider']) {
         updateActiveProviderBadges(data.config['sa-active-provider']);
+      }
+      
+      // Atualiza badges de ambiente manualmente caso o Gateway.health demore
+      if (data.config['sa-efi-env']) {
+        const envBadge = document.getElementById('sa-env-efipay');
+        if (envBadge) {
+          const isProd = data.config['sa-efi-env'] === 'production';
+          envBadge.textContent = isProd ? 'Produção' : 'Sandbox';
+          envBadge.className = isProd ? 'badge badge-green' : 'badge badge-yellow';
+        }
       }
     }
   } catch (err) {
