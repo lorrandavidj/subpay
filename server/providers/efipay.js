@@ -110,7 +110,7 @@ export async function efipayRawRequest(method, path, body = null) {
     return await client().request(method, path, body);
   } catch (err) {
     const detail = err.response?.data || err.message;
-    console.error(`[EfiPay] Raw request error (${method} ${path}):`, detail);
+    console.error(`[EfiPay] Raw request error (${method} ${path}):`, JSON.stringify(detail, null, 2));
     throw err;
   }
 }
@@ -127,8 +127,14 @@ export async function efipayRawRequest(method, path, body = null) {
  */
 export async function createCharge({ amount, name, cpf, description, expiresIn = 3600, externalId }) {
   // O txid deve ter entre 26 e 35 caracteres, alfanumérico.
-  const txid = externalId?.replace(/[^a-zA-Z0-9]/g, '').slice(0, 35)
-    || (Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)).toUpperCase().slice(0, 35);
+  let txid = externalId?.replace(/[^a-zA-Z0-9]/g, '') || '';
+  if (txid.length < 26) {
+    // Adiciona sufixo aleatório para atingir 27 caracteres (margem de segurança)
+    txid = (txid + 'PAYZAP' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2))
+      .toUpperCase().replace(/[^A-Z0-0]/g, '').slice(0, 35);
+  } else {
+    txid = txid.slice(0, 35);
+  }
 
   const body = {
     calendario: { expiracao: expiresIn },
