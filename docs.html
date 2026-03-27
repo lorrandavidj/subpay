@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayZap — API Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <link rel="stylesheet" href="pages/docs/style.css"/>
+</head>
+<body>
+<div class="docs-layout">
+
+  <!-- ════════ LEFT NAV ════════ -->
+  <nav class="docs-nav">
+    <div class="docs-logo">
+      <div class="docs-logo-icon">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1L13 12H1L7 1Z" fill="white" opacity="0.95"/>
+          <path d="M7 5L10 10H4L7 5Z" fill="rgba(0,0,0,0.25)"/>
+        </svg>
+      </div>
+      <span class="docs-logo-name">PayZap API</span>
+      <span class="docs-logo-badge">v1</span>
+    </div>
+
+    <div class="docs-search">
+      <input class="docs-search-input" type="text" placeholder="Buscar na documentação..."/>
+    </div>
+
+    <div class="docs-nav-scroll">
+      <div class="nav-group-label">Início</div>
+      <div class="nav-link active" onclick="showDoc('intro',this)">Introdução</div>
+      <div class="nav-link" onclick="showDoc('auth',this)">Autenticação</div>
+      <div class="nav-link" onclick="showDoc('ambientes',this)">Ambientes</div>
+      <div class="nav-link" onclick="showDoc('erros',this)">Erros</div>
+
+      <div class="nav-group-label">Cobranças</div>
+      <div class="nav-link" onclick="showDoc('create-charge',this)">
+        <span class="nav-method method-post">POST</span>/charges
+      </div>
+      <div class="nav-link" onclick="showDoc('get-charge',this)">
+        <span class="nav-method method-get">GET</span>/charges/:id
+      </div>
+      <div class="nav-link" onclick="showDoc('list-charges',this)">
+        <span class="nav-method method-get">GET</span>/charges
+      </div>
+      <div class="nav-link" onclick="showDoc('refund',this)">
+        <span class="nav-method method-post">POST</span>/charges/:id/refund
+      </div>
+
+      <div class="nav-group-label">Financeiro</div>
+      <div class="nav-link" onclick="showDoc('balance',this)">
+        <span class="nav-method method-get">GET</span>/balance
+      </div>
+      <div class="nav-link" onclick="showDoc('create-withdrawal',this)">
+        <span class="nav-method method-post">POST</span>/withdrawals
+      </div>
+      <div class="nav-link" onclick="showDoc('list-withdrawals',this)">
+        <span class="nav-method method-get">GET</span>/withdrawals
+      </div>
+
+      <div class="nav-group-label">Webhooks</div>
+      <div class="nav-link" onclick="showDoc('create-webhook',this)">
+        <span class="nav-method method-post">POST</span>/webhooks
+      </div>
+      <div class="nav-link" onclick="showDoc('list-webhooks',this)">
+        <span class="nav-method method-get">GET</span>/webhooks
+      </div>
+      <div class="nav-link" onclick="showDoc('delete-webhook',this)">
+        <span class="nav-method method-del">DEL</span>/webhooks/:id
+      </div>
+      <div class="nav-link" onclick="showDoc('events',this)">
+        <span class="nav-method method-get">GET</span>/events
+      </div>
+      <div class="nav-link" onclick="showDoc('webhook-guide',this)">Guia de Webhooks</div>
+
+      <div class="nav-group-label">SDKs</div>
+      <div class="nav-link" onclick="showDoc('sdks',this)">Node.js / Python</div>
+    </div>
+  </nav>
+
+  <!-- ════════ MAIN ════════ -->
+  <div class="docs-main">
+    <div class="docs-topbar">
+      <div class="env-toggle">
+        <button class="env-btn active" id="env-prod" onclick="setEnv('prod')">Produção</button>
+        <button class="env-btn" id="env-sand" onclick="setEnv('sand')">Sandbox</button>
+      </div>
+      <span class="base-url" id="base-url-display">https://api.payzap.com/v1</span>
+      <div style="flex:1"></div>
+      <button class="icon-btn theme-btn" onclick="Theme.toggle()"></button>
+      <a href="index.html" style="font-size:13px;color:var(--text2);text-decoration:none;display:flex;align-items:center;gap:6px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Acessar painel
+      </a>
+    </div>
+
+    <div class="docs-body">
+      <!-- ── CONTENT ── -->
+      <div class="docs-content">
+
+        <!-- INTRO -->
+        <div id="doc-intro" class="doc-section active">
+          <div class="doc-title">PayZap API</div>
+          <p class="doc-lead">A API REST da PayZap permite que você integre pagamentos Pix, gerencie cobranças e automatize sua operação financeira de ponta a ponta.</p>
+
+          <div class="doc-subtitle">Base URL</div>
+          <div class="endpoint-header">
+            <span class="ep-path">https://api.payzap.com/v1</span>
+          </div>
+
+          <div class="doc-subtitle">Formato</div>
+          <p class="doc-p">Todos os requests e responses são em JSON. O header <code style="font-family:var(--font-mono);color:var(--blue);font-size:13px">Content-Type: application/json</code> é obrigatório para requests com body.</p>
+
+          <div class="doc-subtitle">Rate Limiting</div>
+          <p class="doc-p">Os limites por plano:</p>
+          <table class="params-table">
+            <thead><tr><th>Plano</th><th>Requests/min</th><th>Requests/dia</th></tr></thead>
+            <tbody>
+              <tr><td>Básico</td><td>60</td><td>10.000</td></tr>
+              <tr><td>Pro</td><td>300</td><td>100.000</td></tr>
+              <tr><td>Enterprise</td><td>1.000</td><td>Ilimitado</td></tr>
+            </tbody>
+          </table>
+
+          <div class="doc-subtitle">Idempotência</div>
+          <p class="doc-p">Para requests <code style="font-family:var(--font-mono);color:var(--blue);font-size:13px">POST</code>, envie o header <code style="font-family:var(--font-mono);color:var(--yellow);font-size:13px">Idempotency-Key: &lt;uuid&gt;</code> para garantir que requests duplicados não gerem cobranças duplicadas.</p>
+        </div>
+
+        <!-- AUTH -->
+        <div id="doc-auth" class="doc-section">
+          <div class="doc-title">Autenticação</div>
+          <p class="doc-lead">A PayZap usa Bearer tokens para autenticar requests. Inclua sua chave de API em todas as chamadas.</p>
+
+          <div class="doc-subtitle">Header de autenticação</div>
+          <div class="endpoint-header" style="font-family:var(--font-mono);font-size:13px">
+            <span class="token-key">Authorization:</span>&nbsp;<span class="token-str">Bearer sk_live_xxxxxxxxxxxxxxxxxxx</span>
+          </div>
+
+          <div class="doc-subtitle">Tipos de chave</div>
+          <table class="params-table">
+            <thead><tr><th>Prefixo</th><th>Ambiente</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>sk_live_</td><td>Produção</td><td class="text-muted">Processa pagamentos reais. Guarde com segurança.</td></tr>
+              <tr><td>sk_test_</td><td>Sandbox</td><td class="text-muted">Para desenvolvimento e testes. Não gera cobranças reais.</td></tr>
+            </tbody>
+          </table>
+
+          <p class="doc-p" style="background:var(--red-dim);border:1px solid rgba(230,57,70,0.2);border-radius:var(--radius-sm);padding:14px;color:var(--text)">
+            ⚠️ <strong>Nunca exponha suas chaves de API</strong> no frontend ou em repositórios públicos. Use variáveis de ambiente.
+          </p>
+        </div>
+
+        <!-- AMBIENTES -->
+        <div id="doc-ambientes" class="doc-section">
+          <div class="doc-title">Ambientes</div>
+          <p class="doc-lead">A PayZap oferece dois ambientes isolados: produção e sandbox.</p>
+          <table class="params-table">
+            <thead><tr><th>Ambiente</th><th>Base URL</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>Produção</td><td>https://api.payzap.com/v1</td><td class="text-muted">Pagamentos reais, chave sk_live_</td></tr>
+              <tr><td>Sandbox</td><td>https://sandbox.api.payzap.com/v1</td><td class="text-muted">Testes, chave sk_test_</td></tr>
+            </tbody>
+          </table>
+          <div class="doc-subtitle">Comportamento no Sandbox</div>
+          <p class="doc-p">No sandbox, use valores especiais para simular respostas:
+          <br>• <code class="text-mono" style="color:var(--green)">R$ 10,00</code> → Aprovação imediata
+          <br>• <code class="text-mono" style="color:var(--red)">R$ 11,00</code> → Expiração após 30s
+          <br>• <code class="text-mono" style="color:var(--yellow)">R$ 12,00</code> → Cancelamento</p>
+        </div>
+
+        <!-- CREATE CHARGE -->
+        <div id="doc-create-charge" class="doc-section">
+          <div class="doc-title">Criar Cobrança</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-post">POST</span>
+            <span class="ep-path">/charges</span>
+          </div>
+          <p class="ep-desc">Cria uma nova cobrança Pix e retorna o QR Code e o código copia-e-cola para o pagador.</p>
+
+          <div class="doc-subtitle">Parâmetros</div>
+          <table class="params-table">
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>amount</td><td>integer</td><td><span class="required-yes">Sim</span></td><td class="text-muted">Valor em centavos (ex: 9900 = R$ 99,00)</td></tr>
+              <tr><td>description</td><td>string</td><td><span class="required-yes">Sim</span></td><td class="text-muted">Descrição da cobrança (max 150 chars)</td></tr>
+              <tr><td>customer.name</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">Nome do pagador</td></tr>
+              <tr><td>customer.email</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">E-mail do pagador</td></tr>
+              <tr><td>customer.tax_id</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">CPF/CNPJ (apenas dígitos)</td></tr>
+              <tr><td>expires_in</td><td>integer</td><td><span class="required-no">Não</span></td><td class="text-muted">Expiração em segundos (padrão: 3600)</td></tr>
+              <tr><td>metadata</td><td>object</td><td><span class="required-no">Não</span></td><td class="text-muted">Dados customizados (max 10 chaves)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- GET CHARGE -->
+        <div id="doc-get-charge" class="doc-section">
+          <div class="doc-title">Consultar Cobrança</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-get">GET</span>
+            <span class="ep-path">/charges/:id</span>
+          </div>
+          <p class="ep-desc">Retorna os dados de uma cobrança específica pelo ID.</p>
+          <div class="doc-subtitle">Parâmetros de path</div>
+          <table class="params-table">
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>id</td><td>string</td><td><span class="required-yes">Sim</span></td><td class="text-muted">ID da cobrança (formato: chg_xxxxxxxxxx)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- LIST CHARGES -->
+        <div id="doc-list-charges" class="doc-section">
+          <div class="doc-title">Listar Cobranças</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-get">GET</span>
+            <span class="ep-path">/charges</span>
+          </div>
+          <p class="ep-desc">Retorna uma lista paginada de cobranças. Suporta filtros por status, data e valor.</p>
+          <div class="doc-subtitle">Query parameters</div>
+          <table class="params-table">
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>status</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">paid | expired | cancelled | pending</td></tr>
+              <tr><td>from</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">Data inicial ISO 8601 (ex: 2025-01-01)</td></tr>
+              <tr><td>to</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">Data final ISO 8601</td></tr>
+              <tr><td>limit</td><td>integer</td><td><span class="required-no">Não</span></td><td class="text-muted">Itens por página (1–100, padrão: 20)</td></tr>
+              <tr><td>page</td><td>integer</td><td><span class="required-no">Não</span></td><td class="text-muted">Número da página (padrão: 1)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- REFUND -->
+        <div id="doc-refund" class="doc-section">
+          <div class="doc-title">Reembolsar Cobrança</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-post">POST</span>
+            <span class="ep-path">/charges/:id/refund</span>
+          </div>
+          <p class="ep-desc">Inicia o reembolso de uma cobrança paga. O valor é devolvido via Pix em até 7 dias úteis.</p>
+          <div class="doc-subtitle">Parâmetros</div>
+          <table class="params-table">
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>amount</td><td>integer</td><td><span class="required-no">Não</span></td><td class="text-muted">Valor do reembolso em centavos. Se omitido, reembolso total.</td></tr>
+              <tr><td>reason</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">Motivo do reembolso (max 200 chars)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- BALANCE -->
+        <div id="doc-balance" class="doc-section">
+          <div class="doc-title">Consultar Saldo</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-get">GET</span>
+            <span class="ep-path">/balance</span>
+          </div>
+          <p class="ep-desc">Retorna o saldo atual da conta, incluindo disponível para saque, a receber e retido.</p>
+        </div>
+
+        <!-- CREATE WITHDRAWAL -->
+        <div id="doc-create-withdrawal" class="doc-section">
+          <div class="doc-title">Solicitar Saque</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-post">POST</span>
+            <span class="ep-path">/withdrawals</span>
+          </div>
+          <p class="ep-desc">Solicita um saque do saldo disponível para uma chave Pix cadastrada.</p>
+          <div class="doc-subtitle">Parâmetros</div>
+          <table class="params-table">
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>amount</td><td>integer</td><td><span class="required-yes">Sim</span></td><td class="text-muted">Valor em centavos (mínimo: 500)</td></tr>
+              <tr><td>pix_key</td><td>string</td><td><span class="required-yes">Sim</span></td><td class="text-muted">Chave Pix de destino (CPF, e-mail, telefone ou aleatória)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- LIST WITHDRAWALS -->
+        <div id="doc-list-withdrawals" class="doc-section">
+          <div class="doc-title">Listar Saques</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-get">GET</span>
+            <span class="ep-path">/withdrawals</span>
+          </div>
+          <p class="ep-desc">Retorna o histórico de saques paginado.</p>
+        </div>
+
+        <!-- CREATE WEBHOOK -->
+        <div id="doc-create-webhook" class="doc-section">
+          <div class="doc-title">Cadastrar Webhook</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-post">POST</span>
+            <span class="ep-path">/webhooks</span>
+          </div>
+          <p class="ep-desc">Registra uma URL para receber notificações de eventos em tempo real.</p>
+          <div class="doc-subtitle">Parâmetros</div>
+          <table class="params-table">
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>url</td><td>string</td><td><span class="required-yes">Sim</span></td><td class="text-muted">URL HTTPS de destino (deve retornar 200)</td></tr>
+              <tr><td>events</td><td>array</td><td><span class="required-yes">Sim</span></td><td class="text-muted">Lista de eventos para assinar (ex: ["charge.paid"])</td></tr>
+              <tr><td>secret</td><td>string</td><td><span class="required-no">Não</span></td><td class="text-muted">Secret para validação de assinatura HMAC</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- LIST WEBHOOKS -->
+        <div id="doc-list-webhooks" class="doc-section">
+          <div class="doc-title">Listar Webhooks</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-get">GET</span>
+            <span class="ep-path">/webhooks</span>
+          </div>
+          <p class="ep-desc">Retorna todos os webhooks cadastrados e suas estatísticas de entrega.</p>
+        </div>
+
+        <!-- DELETE WEBHOOK -->
+        <div id="doc-delete-webhook" class="doc-section">
+          <div class="doc-title">Remover Webhook</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-del">DELETE</span>
+            <span class="ep-path">/webhooks/:id</span>
+          </div>
+          <p class="ep-desc">Remove permanentemente um webhook cadastrado.</p>
+        </div>
+
+        <!-- EVENTS -->
+        <div id="doc-events" class="doc-section">
+          <div class="doc-title">Listar Eventos</div>
+          <div class="endpoint-header">
+            <span class="ep-method method-get">GET</span>
+            <span class="ep-path">/events</span>
+          </div>
+          <p class="ep-desc">Retorna o log de eventos da sua conta, com suporte a filtros e paginação.</p>
+        </div>
+
+        <!-- WEBHOOK GUIDE -->
+        <div id="doc-webhook-guide" class="doc-section">
+          <div class="doc-title">Guia de Webhooks</div>
+          <p class="doc-lead">Webhooks permitem que sua aplicação seja notificada em tempo real quando eventos importantes ocorrem na PayZap.</p>
+
+          <div class="doc-subtitle">Eventos disponíveis</div>
+          <div style="border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:24px">
+            <div class="event-row" style="padding:10px 16px"><span class="event-name">charge.paid</span><span class="event-desc">Cobrança paga com sucesso</span></div>
+            <div class="event-row" style="padding:10px 16px"><span class="event-name">charge.expired</span><span class="event-desc">Cobrança expirou sem pagamento</span></div>
+            <div class="event-row" style="padding:10px 16px"><span class="event-name">charge.cancelled</span><span class="event-desc">Cobrança cancelada</span></div>
+            <div class="event-row" style="padding:10px 16px"><span class="event-name">charge.refunded</span><span class="event-desc">Reembolso processado</span></div>
+            <div class="event-row" style="padding:10px 16px"><span class="event-name">withdrawal.paid</span><span class="event-desc">Saque processado</span></div>
+            <div class="event-row" style="padding:10px 16px;border-bottom:none"><span class="event-name">withdrawal.failed</span><span class="event-desc">Falha no saque</span></div>
+          </div>
+
+          <div class="doc-subtitle">Validando a assinatura</div>
+          <p class="doc-p">Cada request de webhook inclui o header <code class="text-mono" style="color:var(--blue)">X-PayZap-Signature</code> com um HMAC-SHA256 do body usando seu secret. Valide sempre antes de processar.</p>
+        </div>
+
+        <!-- SDKs -->
+        <div id="doc-sdks" class="doc-section">
+          <div class="doc-title">SDKs Oficiais</div>
+          <p class="doc-lead">Instale o SDK da PayZap para sua linguagem e comece a integrar em minutos.</p>
+
+          <div class="doc-subtitle">Node.js / npm</div>
+          <div class="sdk-badges">
+            <div class="sdk-badge" onclick="copyToClipboard('npm install payzap','Comando copiado!')">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="#cb3837"><rect width="14" height="14" rx="2"/><rect x="3.5" y="3.5" width="7" height="7" fill="white"/><rect x="8.75" y="3.5" width="1.75" height="5.25" fill="#cb3837"/></svg>
+              npm install payzap
+            </div>
+            <div class="sdk-badge" onclick="copyToClipboard('yarn add payzap','Comando copiado!')">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="#2C8EBB"><rect width="14" height="14" rx="2"/><text x="3" y="11" font-size="9" fill="white" font-weight="bold">y</text></svg>
+              yarn add payzap
+            </div>
+          </div>
+
+          <div class="doc-subtitle">Python / pip</div>
+          <div class="sdk-badges">
+            <div class="sdk-badge" onclick="copyToClipboard('pip install payzap','Comando copiado!')">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="#3776ab"><rect width="14" height="14" rx="2"/><text x="2.5" y="11" font-size="9" fill="white" font-weight="bold">Py</text></svg>
+              pip install payzap
+            </div>
+          </div>
+        </div>
+
+        <!-- ERROS -->
+        <div id="doc-erros" class="doc-section">
+          <div class="doc-title">Erros</div>
+          <p class="doc-lead">A API usa HTTP status codes para indicar sucesso ou falha. Erros retornam um objeto JSON com <code class="text-mono" style="color:var(--blue)">error.code</code> e <code class="text-mono" style="color:var(--blue)">error.message</code>.</p>
+
+          <div class="doc-subtitle">Códigos de erro</div>
+          <table class="error-table">
+            <thead><tr><th>HTTP</th><th>Código</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td>invalid_request</td><td class="text-muted">Parâmetros inválidos ou ausentes</td></tr>
+              <tr><td>401</td><td>unauthorized</td><td class="text-muted">Chave de API inválida ou ausente</td></tr>
+              <tr><td>402</td><td>insufficient_funds</td><td class="text-muted">Saldo insuficiente para saque</td></tr>
+              <tr><td>403</td><td>forbidden</td><td class="text-muted">Operação não permitida para este plano</td></tr>
+              <tr><td>404</td><td>not_found</td><td class="text-muted">Recurso não encontrado</td></tr>
+              <tr><td>409</td><td>duplicate_request</td><td class="text-muted">Request duplicado (Idempotency-Key já usada)</td></tr>
+              <tr><td>422</td><td>charge_expired</td><td class="text-muted">Cobrança já expirada</td></tr>
+              <tr><td>429</td><td>rate_limited</td><td class="text-muted">Limite de requests excedido</td></tr>
+              <tr><td>500</td><td>internal_error</td><td class="text-muted">Erro interno. Tente novamente ou contate o suporte.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /docs-content -->
+
+      <!-- ── EXAMPLES PANEL ── -->
+      <div class="docs-examples" id="examples-panel">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+Theme.init();
+/* ── EXAMPLES DATA ── */
+const EXAMPLES = {
+  intro: {
+    right: [{
+      label: 'Request de exemplo',
+      lang: 'cURL',
+      code: `<span class="token-method">curl</span> https://api.payzap.com/v1/charges \\
+  -H <span class="token-str">"Authorization: Bearer sk_live_xxx"</span> \\
+  -H <span class="token-str">"Content-Type: application/json"</span> \\
+  -d <span class="token-str">'{"amount": 9900, "description": "Produto X"}'</span>`
+    }, {
+      label: 'Response',
+      lang: 'JSON',
+      code: `{
+  <span class="token-key">"id"</span>: <span class="token-str">"chg_A1B2C3D4E5"</span>,
+  <span class="token-key">"status"</span>: <span class="token-str">"pending"</span>,
+  <span class="token-key">"amount"</span>: <span class="token-num">9900</span>,
+  <span class="token-key">"qr_code"</span>: <span class="token-str">"00020126..."</span>,
+  <span class="token-key">"expires_at"</span>: <span class="token-str">"2025-03-25T20:00:00Z"</span>
+}`
+    }]
+  },
+  auth: {
+    right: [{
+      label: 'Header de autenticação',
+      lang: 'HTTP',
+      code: `GET /v1/charges HTTP/1.1
+Host: api.payzap.com
+<span class="token-key">Authorization:</span> <span class="token-str">Bearer sk_live_xxxxxxxxxxxxxxxx</span>
+Content-Type: application/json`
+    }, {
+      label: 'Resposta de erro (sem token)',
+      lang: 'JSON',
+      code: `{
+  <span class="token-key">"error"</span>: {
+    <span class="token-key">"code"</span>: <span class="token-str">"unauthorized"</span>,
+    <span class="token-key">"message"</span>: <span class="token-str">"API key inválida ou ausente"</span>,
+    <span class="token-key">"status"</span>: <span class="token-num">401</span>
+  }
+}`
+    }]
+  },
+  'create-charge': {
+    tabs: ['cURL', 'JavaScript', 'Python'],
+    codes: [
+      `<span class="token-method">curl</span> -X POST https://api.payzap.com/v1/charges \\
+  -H <span class="token-str">"Authorization: Bearer sk_live_xxx"</span> \\
+  -H <span class="token-str">"Content-Type: application/json"</span> \\
+  -d <span class="token-str">'{
+    "amount": 29700,
+    "description": "Curso de Marketing Digital",
+    "customer": {
+      "name": "Maria Silva",
+      "email": "maria@email.com",
+      "tax_id": "12345678900"
+    },
+    "expires_in": 3600
+  }'</span>`,
+      `<span class="token-comment">// npm install payzap</span>
+<span class="token-key">import</span> PayZap <span class="token-key">from</span> <span class="token-str">'payzap'</span>;
+
+<span class="token-key">const</span> client = <span class="token-key">new</span> PayZap(<span class="token-str">'sk_live_xxx'</span>);
+
+<span class="token-key">const</span> charge = <span class="token-key">await</span> client.charges.create({
+  amount: <span class="token-num">29700</span>,
+  description: <span class="token-str">'Curso de Marketing Digital'</span>,
+  customer: {
+    name: <span class="token-str">'Maria Silva'</span>,
+    email: <span class="token-str">'maria@email.com'</span>,
+    tax_id: <span class="token-str">'12345678900'</span>
+  },
+  expires_in: <span class="token-num">3600</span>
+});
+
+console.log(charge.qr_code);`,
+      `<span class="token-comment"># pip install payzap</span>
+<span class="token-key">import</span> payzap
+
+client = payzap.Client(<span class="token-str">"sk_live_xxx"</span>)
+
+charge = client.charges.create(
+    amount=<span class="token-num">29700</span>,
+    description=<span class="token-str">"Curso de Marketing Digital"</span>,
+    customer={
+        <span class="token-str">"name"</span>: <span class="token-str">"Maria Silva"</span>,
+        <span class="token-str">"email"</span>: <span class="token-str">"maria@email.com"</span>,
+        <span class="token-str">"tax_id"</span>: <span class="token-str">"12345678900"</span>
+    },
+    expires_in=<span class="token-num">3600</span>
+)
+
+print(charge.qr_code)`
+    ],
+    response: `{
+  <span class="token-key">"id"</span>: <span class="token-str">"chg_A1B2C3D4E5F6"</span>,
+  <span class="token-key">"status"</span>: <span class="token-str">"pending"</span>,
+  <span class="token-key">"amount"</span>: <span class="token-num">29700</span>,
+  <span class="token-key">"amount_formatted"</span>: <span class="token-str">"R$ 297,00"</span>,
+  <span class="token-key">"description"</span>: <span class="token-str">"Curso de Marketing Digital"</span>,
+  <span class="token-key">"qr_code"</span>: <span class="token-str">"00020126580014br.gov.bcb.pix..."</span>,
+  <span class="token-key">"qr_code_image"</span>: <span class="token-str">"data:image/png;base64,..."</span>,
+  <span class="token-key">"customer"</span>: {
+    <span class="token-key">"name"</span>: <span class="token-str">"Maria Silva"</span>,
+    <span class="token-key">"email"</span>: <span class="token-str">"maria@email.com"</span>
+  },
+  <span class="token-key">"expires_at"</span>: <span class="token-str">"2025-03-25T21:00:00Z"</span>,
+  <span class="token-key">"created_at"</span>: <span class="token-str">"2025-03-25T20:00:00Z"</span>
+}`
+  },
+  'get-charge': {
+    response: `{
+  <span class="token-key">"id"</span>: <span class="token-str">"chg_A1B2C3D4E5F6"</span>,
+  <span class="token-key">"status"</span>: <span class="token-str">"paid"</span>,
+  <span class="token-key">"amount"</span>: <span class="token-num">29700</span>,
+  <span class="token-key">"paid_at"</span>: <span class="token-str">"2025-03-25T20:04:32Z"</span>,
+  <span class="token-key">"customer"</span>: {
+    <span class="token-key">"name"</span>: <span class="token-str">"Maria Silva"</span>,
+    <span class="token-key">"tax_id"</span>: <span class="token-str">"***456789**"</span>
+  }
+}`
+  },
+  'list-charges': {
+    response: `{
+  <span class="token-key">"data"</span>: [
+    {
+      <span class="token-key">"id"</span>: <span class="token-str">"chg_A1B2C3D4E5F6"</span>,
+      <span class="token-key">"status"</span>: <span class="token-str">"paid"</span>,
+      <span class="token-key">"amount"</span>: <span class="token-num">29700</span>,
+      <span class="token-key">"created_at"</span>: <span class="token-str">"2025-03-25T20:00:00Z"</span>
+    }
+  ],
+  <span class="token-key">"meta"</span>: {
+    <span class="token-key">"total"</span>: <span class="token-num">1284</span>,
+    <span class="token-key">"page"</span>: <span class="token-num">1</span>,
+    <span class="token-key">"limit"</span>: <span class="token-num">20</span>,
+    <span class="token-key">"pages"</span>: <span class="token-num">65</span>
+  }
+}`
+  },
+  balance: {
+    response: `{
+  <span class="token-key">"available"</span>: <span class="token-num">1438000</span>,
+  <span class="token-key">"pending"</span>: <span class="token-num">892000</span>,
+  <span class="token-key">"retained"</span>: <span class="token-num">0</span>,
+  <span class="token-key">"currency"</span>: <span class="token-str">"BRL"</span>,
+  <span class="token-key">"updated_at"</span>: <span class="token-str">"2025-03-25T20:00:00Z"</span>
+}`
+  },
+  'webhook-guide': {
+    right: [{
+      label: 'Handler em Node.js',
+      lang: 'JavaScript',
+      code: `<span class="token-key">import</span> crypto <span class="token-key">from</span> <span class="token-str">'crypto'</span>;
+
+app.post(<span class="token-str">'/webhook'</span>, (req, res) => {
+  <span class="token-key">const</span> sig = req.headers[<span class="token-str">'x-payzap-signature'</span>];
+  <span class="token-key">const</span> expected = crypto
+    .createHmac(<span class="token-str">'sha256'</span>, process.env.WEBHOOK_SECRET)
+    .update(JSON.stringify(req.body))
+    .digest(<span class="token-str">'hex'</span>);
+
+  <span class="token-key">if</span> (sig !== expected) {
+    <span class="token-key">return</span> res.status(<span class="token-num">401</span>).end();
+  }
+
+  <span class="token-key">const</span> { event, data } = req.body;
+
+  <span class="token-key">if</span> (event === <span class="token-str">'charge.paid'</span>) {
+    <span class="token-comment">// liberar acesso ao produto</span>
+    fulfillOrder(data.id);
+  }
+
+  res.status(<span class="token-num">200</span>).end();
+});`
+    }, {
+      label: 'Estrutura do payload',
+      lang: 'JSON',
+      code: `{
+  <span class="token-key">"id"</span>: <span class="token-str">"evt_xxxxxxxxxxx"</span>,
+  <span class="token-key">"event"</span>: <span class="token-str">"charge.paid"</span>,
+  <span class="token-key">"created_at"</span>: <span class="token-str">"2025-03-25T20:04:32Z"</span>,
+  <span class="token-key">"data"</span>: {
+    <span class="token-key">"id"</span>: <span class="token-str">"chg_A1B2C3D4E5F6"</span>,
+    <span class="token-key">"amount"</span>: <span class="token-num">29700</span>,
+    <span class="token-key">"status"</span>: <span class="token-str">"paid"</span>
+  }
+}`
+    }]
+  },
+  sdks: {
+    right: [{
+      label: 'Node.js — uso básico',
+      lang: 'JavaScript',
+      code: `<span class="token-key">import</span> PayZap <span class="token-key">from</span> <span class="token-str">'payzap'</span>;
+
+<span class="token-key">const</span> pz = <span class="token-key">new</span> PayZap(process.env.PAYZAP_KEY);
+
+<span class="token-comment">// Criar cobrança</span>
+<span class="token-key">const</span> charge = <span class="token-key">await</span> pz.charges.create({
+  amount: <span class="token-num">9900</span>,
+  description: <span class="token-str">'Produto X'</span>
+});
+
+<span class="token-comment">// Consultar saldo</span>
+<span class="token-key">const</span> balance = <span class="token-key">await</span> pz.balance.get();
+console.log(balance.available); <span class="token-comment">// em centavos</span>`
+    }, {
+      label: 'Python — uso básico',
+      lang: 'Python',
+      code: `<span class="token-key">import</span> payzap
+<span class="token-key">import</span> os
+
+pz = payzap.Client(os.environ[<span class="token-str">"PAYZAP_KEY"</span>])
+
+<span class="token-comment"># Criar cobrança</span>
+charge = pz.charges.create(
+    amount=<span class="token-num">9900</span>,
+    description=<span class="token-str">"Produto X"</span>
+)
+
+<span class="token-comment"># Listar cobranças pagas</span>
+charges = pz.charges.list(status=<span class="token-str">"paid"</span>)
+<span class="token-key">for</span> c <span class="token-key">in</span> charges.data:
+    print(c.id, c.amount)`
+    }]
+  }
+};
+
+/* ── CURRENT STATE ── */
+let currentDoc = 'intro';
+let currentTab = 0;
+let currentEnv = 'prod';
+
+function setEnv(env) {
+  currentEnv = env;
+  document.getElementById('env-prod').classList.toggle('active', env === 'prod');
+  document.getElementById('env-sand').classList.toggle('active', env === 'sand');
+  document.getElementById('base-url-display').textContent = env === 'prod'
+    ? 'https://api.payzap.com/v1'
+    : 'https://sandbox.api.payzap.com/v1';
+}
+
+function showDoc(id, el) {
+  document.querySelectorAll('.doc-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+  document.getElementById('doc-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  currentDoc = id;
+  currentTab = 0;
+  renderExamples(id);
+}
+
+function renderExamples(docId) {
+  const ex = EXAMPLES[docId];
+  const panel = document.getElementById('examples-panel');
+
+  if (!ex) { panel.innerHTML = '<p style="color:var(--text3);font-size:13px;margin-top:40px;text-align:center">Nenhum exemplo disponível</p>'; return; }
+
+  let html = '';
+
+  if (ex.tabs && ex.codes) {
+    const tabsHtml = ex.tabs.map((t, i) =>
+      `<button class="code-tab ${i===currentTab?'active':''}" onclick="selectCodeTab(${i})">${t}</button>`).join('');
+
+    html += `<div class="ex-label">Request</div>
+      <div class="code-block">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          <div style="display:flex;gap:2px">${tabsHtml}</div>
+          <button class="code-copy" onclick="copyCode('req-code')">Copiar</button>
+        </div>
+        <pre><code id="req-code">${ex.codes[currentTab]}</code></pre>
+      </div>`;
+
+    if (ex.response) {
+      html += `<div class="ex-label">Response</div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">JSON</span><button class="code-copy" onclick="copyCode('res-code')">Copiar</button></div>
+          <pre><code id="res-code">${ex.response}</code></pre>
+        </div>`;
+    }
+  } else if (ex.right) {
+    ex.right.forEach((block, i) => {
+      html += `<div class="ex-label">${block.label}</div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">${block.lang}</span><button class="code-copy" onclick="copyCode('ex-code-${i}')">Copiar</button></div>
+          <pre><code id="ex-code-${i}">${block.code}</code></pre>
+        </div>`;
+    });
+  } else if (ex.response) {
+    html += `<div class="ex-label">Response</div>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">JSON</span><button class="code-copy" onclick="copyCode('res-code')">Copiar</button></div>
+        <pre><code id="res-code">${ex.response}</code></pre>
+      </div>`;
+  }
+
+  panel.innerHTML = html;
+}
+
+function selectCodeTab(idx) {
+  currentTab = idx;
+  renderExamples(currentDoc);
+}
+
+function copyCode(elId) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const text = el.innerText;
+  copyToClipboard(text, 'Código copiado!');
+}
+
+// Init
+renderExamples('intro');
+</script>
+</body>
+</html>

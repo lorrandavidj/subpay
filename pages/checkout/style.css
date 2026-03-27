@@ -1,0 +1,262 @@
+/* Checkout — Apple style */
+
+html, body { min-height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 48px 16px 72px;
+  background: var(--bg);
+}
+
+.checkout-wrap { width: 100%; max-width: 460px; }
+
+/* ── BRAND ── */
+.checkout-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.brand-logo {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin-bottom: 14px;
+  background: var(--bg2);
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.brand-product { font-size: 13px; color: var(--text2); }
+
+/* ── CARD ── */
+.checkout-card {
+  background: var(--bg2);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 14px;
+}
+
+.price-display {
+  text-align: center;
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-label { font-size: 12px; color: var(--text3); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+.price-value { font-family: var(--font-display); font-size: 48px; font-weight: 700; letter-spacing: -0.05em; }
+.price-sub { font-size: 13px; color: var(--text3); margin-top: 6px; }
+
+/* ── PRODUCT INFO ── */
+.product-info {
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 22px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.product-emoji { font-size: 26px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.product-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; letter-spacing: -0.01em; }
+.product-desc  { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* ── FORM ── */
+.checkout-form { display: flex; flex-direction: column; gap: 12px; }
+
+/* ── STATES ── */
+.checkout-state { display: none; }
+.checkout-state.active { display: block; }
+
+/* ── PIX ── */
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 16px;
+}
+
+.qr-frame {
+  width: 188px; height: 188px;
+  background: white;
+  border-radius: 16px;
+  padding: 12px;
+  margin-bottom: 22px;
+}
+
+.pix-code-box {
+  width: 100%;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.pix-code-text {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text2);
+  padding: 10px 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pix-code-copy {
+  padding: 10px 14px;
+  background: transparent;
+  border-left: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  transition: background 0.15s;
+  white-space: nowrap;
+  border-top: none; border-right: none; border-bottom: none;
+  font-family: var(--font-body);
+}
+.pix-code-copy:hover { background: var(--blue); color: #fff; }
+
+/* ── TIMER ── */
+.timer-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+.timer-display {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--yellow);
+}
+
+.timer-label { font-size: 12px; color: var(--text3); }
+
+.timer-bar-wrap { width: 100%; height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; margin-bottom: 22px; }
+.timer-bar { height: 100%; background: var(--yellow); border-radius: 2px; transition: width 1s linear, background 1s linear; }
+
+/* ── STEPS ── */
+.pix-steps { display: flex; flex-direction: column; gap: 14px; }
+.pix-step { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: var(--text2); }
+.step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--red-dim);
+  color: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── STATUS ── */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text2);
+  margin-bottom: 20px;
+}
+
+.pulse-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--yellow);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.7);} }
+
+/* ── SUCCESS ── */
+.success-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px 0 24px;
+}
+
+.checkmark-circle {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  background: var(--green-dim);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 22px;
+  animation: popIn 0.5s cubic-bezier(0.17,0.89,0.32,1.49) both;
+}
+
+@keyframes popIn { from{transform:scale(0);opacity:0;} to{transform:scale(1);opacity:1;} }
+
+.checkmark-svg {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: drawCheck 0.5s ease 0.3s forwards;
+}
+@keyframes drawCheck { to{stroke-dashoffset:0;} }
+
+.success-title { font-family:var(--font-display); font-size:24px; font-weight:700; letter-spacing:-0.03em; margin-bottom:8px; }
+.success-sub { font-size:14px; color:var(--text2); max-width:300px; line-height:1.6; margin-bottom:24px; }
+
+.order-summary {
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+/* ── CONFETTI ── */
+.confetti-wrap { position:fixed; inset:0; pointer-events:none; z-index:100; overflow:hidden; }
+.confetti-piece {
+  position: absolute;
+  top: -10px;
+  width: 8px; height: 12px;
+  border-radius: 2px;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall { to { transform:translateY(105vh) rotate(720deg); opacity:0; } }
+
+/* ── FOOTER ── */
+.checkout-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+@media (max-width:520px) {
+  body { padding: 24px 12px 52px; }
+  .checkout-card { padding: 20px; }
+  .price-value { font-size: 38px; }
+}

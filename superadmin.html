@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayZap — SuperAdmin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <link rel="stylesheet" href="pages/superadmin/style.css"/>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1.5L14 13H2L8 1.5Z" fill="white" opacity="0.95"/>
+          <path d="M8 5.5L11 11H5L8 5.5Z" fill="rgba(0,0,0,0.25)"/>
+        </svg>
+      </div>
+      <span class="logo-name">PayZap</span>
+      <span class="sidebar-badge">MASTER</span>
+    </div>
+
+    <div class="sidebar-section">Visão geral</div>
+    <div class="nav-item active" onclick="nav('dashboard',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="nav('financeiro',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Financeiro
+    </div>
+
+    <div class="sidebar-section">Operações</div>
+    <div class="nav-item" onclick="nav('vendedores',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Vendedores
+    </div>
+    <div class="nav-item" onclick="nav('transacoes',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      Transações globais
+      <span class="nav-badge">2.4k</span>
+    </div>
+    <div class="nav-item" onclick="nav('meds',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      MEDs / Disputas
+      <span class="nav-badge">7</span>
+    </div>
+
+    <div class="nav-item" onclick="nav('adquirentes',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Adquirentes
+    </div>
+
+    <div class="sidebar-section">Configuração</div>
+    <div class="nav-item" onclick="nav('config',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Configurações
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="toggleDropdown('user-dd')" style="position:relative">
+        <div class="avatar" style="background:var(--blue);color:#0a0b0e">CM</div>
+        <div>
+          <div class="sidebar-user-name">Carlos Mendes</div>
+          <div class="sidebar-user-role">SuperAdmin</div>
+        </div>
+        <div class="dropdown" id="user-dd" style="bottom:calc(100% + 8px);top:auto">
+          <div class="dropdown-item danger" onclick="logout()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sair
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>PayZap</span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current" id="breadcrumb-text">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn theme-btn" onclick="Theme.toggle()"></button>
+        <div class="relative">
+          <button class="icon-btn" onclick="toggleDropdown('notif-dd')" title="Notificações">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-badge">4</span>
+          </button>
+          <div class="dropdown" id="notif-dd" style="width:300px">
+            <div style="padding:8px 10px 4px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase">Notificações</div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">MED crítico — Loja do João</div><div style="font-size:11px;color:var(--text3)">Há 12 min</div></div></div>
+            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">Saque pendente de aprovação</div><div style="font-size:11px;color:var(--text3)">Há 45 min</div></div></div>
+            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">Novo vendedor cadastrado</div><div style="font-size:11px;color:var(--text3)">Há 1h</div></div></div>
+            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">Volume diário bateu R$ 1M</div><div style="font-size:11px;color:var(--text3)">Hoje às 09:43</div></div></div>
+          </div>
+        </div>
+        <div class="relative">
+          <button class="avatar-btn" onclick="toggleDropdown('avatar-dd')">CM</button>
+          <div class="dropdown" id="avatar-dd">
+            <div class="dropdown-item" onclick="showToast('Em desenvolvimento','info')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Meu perfil
+            </div>
+            <div class="dropdown-item" onclick="showToast('Em desenvolvimento','info')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Configurações
+            </div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item danger" onclick="logout()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sair
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ════ DASHBOARD ════ -->
+      <div id="page-dashboard" class="page-section active">
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--blue-dim)"></div>
+            <div class="kpi-label">Volume do Mês</div>
+            <div class="kpi-value">R$ 14,2M</div>
+            <div class="kpi-delta delta-up">▲ +23% vs mês anterior</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--green-dim)"></div>
+            <div class="kpi-label">Vendedores Ativos</div>
+            <div class="kpi-value">3.841</div>
+            <div class="kpi-delta delta-up">▲ +412 novos este mês</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--yellow-dim)"></div>
+            <div class="kpi-label">Taxa de Aprovação</div>
+            <div class="kpi-value">94,7%</div>
+            <div class="kpi-delta delta-down">▼ -0.3% vs mês anterior</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--red-dim)"></div>
+            <div class="kpi-label">Receita MDR</div>
+            <div class="kpi-value">R$ 284k</div>
+            <div class="kpi-delta delta-up">▲ +18% vs mês anterior</div>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Volume por dia — Março 2025</span>
+              <div class="tabs">
+                <button class="tab-btn active">7d</button>
+                <button class="tab-btn" onclick="switchTab(this)">30d</button>
+                <button class="tab-btn" onclick="switchTab(this)">90d</button>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="vol-chart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Status das Transações</span>
+            </div>
+            <div class="chart-wrap"><canvas id="status-chart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Top vendedores mini -->
+        <div class="table-card">
+          <div class="chart-header" style="padding:16px 16px 0">
+            <span class="chart-title">Top Vendedores — Março</span>
+            <button class="btn btn-ghost btn-sm" onclick="nav('vendedores',null)">Ver todos</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>#</th><th>Vendedor</th><th>Volume</th><th>Transações</th><th>Aprovação</th><th>Status</th>
+              </tr></thead>
+              <tbody id="top-vendors-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ VENDEDORES ════ -->
+      <div id="page-vendedores" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">Vendedores</h2>
+          <button class="btn btn-blue btn-sm" onclick="showToast('Exportando lista...','info')">Exportar CSV</button>
+        </div>
+
+        <div class="table-card">
+          <div class="filters-row">
+            <input id="vendor-filter-text" class="filter-input" placeholder="Buscar por nome ou CNPJ..." oninput="filterVendors()" style="flex:1;min-width:200px"/>
+            <select id="vendor-filter-status" class="filter-input" onchange="filterVendors()">
+              <option value="">Todos os status</option>
+              <option value="Ativo">Ativo</option><option value="Suspenso">Suspenso</option><option value="Em análise">Em análise</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Vendedor</th><th>CNPJ</th><th>Volume/Mês</th>
+                <th>Chargeback</th><th>Status</th><th>Desde</th><th>Ações</th>
+              </tr></thead>
+              <tbody id="vendors-body"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="vendors-pag"></div>
+        </div>
+      </div>
+
+      <!-- ════ TRANSAÇÕES GLOBAIS ════ -->
+      <div id="page-transacoes" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">Transações Globais</h2>
+          <div class="flex gap-8">
+            <button class="btn btn-ghost btn-sm" onclick="exportTxns()">Exportar CSV</button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="filters-row">
+            <input id="gtxn-filter-text" class="filter-input" type="text" placeholder="Buscar ID ou cliente..." oninput="filterGlobalTxns()"/>
+            <input id="gtxn-filter-vendor" class="filter-input" type="text" placeholder="Vendedor..." oninput="filterGlobalTxns()"/>
+            <select id="gtxn-filter-status" class="filter-input" onchange="filterGlobalTxns()">
+              <option value="">Todos os status</option>
+              <option value="pago">pago</option><option value="expirado">expirado</option><option value="cancelado">cancelado</option><option value="aguardando">aguardando</option>
+            </select>
+            <input id="gtxn-filter-from" class="filter-input" type="date" onchange="filterGlobalTxns()"/>
+            <input id="gtxn-filter-to" class="filter-input" type="date" onchange="filterGlobalTxns()"/>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>ID</th><th>Vendedor</th><th>Cliente</th><th>Valor</th>
+                <th>Status</th><th>Data</th><th>Ações</th>
+              </tr></thead>
+              <tbody id="global-txn-body"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="global-txn-pag"></div>
+        </div>
+      </div>
+
+      <!-- ════ MEDs ════ -->
+      <div id="page-meds" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">MEDs / Disputas</h2>
+          <div class="tabs">
+            <button class="tab-btn active" onclick="filterMEDs('all',this)">Todos (7)</button>
+            <button class="tab-btn" onclick="filterMEDs('critico',this)">Críticos (4)</button>
+            <button class="tab-btn" onclick="filterMEDs('resolvido',this)">Resolvidos (1)</button>
+          </div>
+        </div>
+
+        <div id="meds-list"></div>
+      </div>
+
+      <!-- ════ FINANCEIRO ════ -->
+      <div id="page-financeiro" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">Financeiro da Plataforma</h2>
+        </div>
+
+        <div class="float-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm text-muted mb-4">Float atual (em trânsito)</div>
+              <div style="font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--blue)">R$ 2.847.392,00</div>
+              <div class="text-sm text-muted mt-8">Liquidação média: D+1 · Próximo ciclo: amanhã 12:00</div>
+            </div>
+            <div style="text-align:right">
+              <div class="badge badge-blue" style="font-size:12px;padding:6px 14px">SALDO DISPONÍVEL</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Receita MDR — Últimos 30 dias</span></div>
+            <div class="chart-wrap"><canvas id="mdr-chart"></canvas></div>
+          </div>
+          <div class="table-card">
+            <div class="chart-header" style="padding:16px 16px 0"><span class="chart-title">Saques Pendentes</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Vendedor</th><th>Valor</th><th>Solicitado</th><th>Ação</th></tr></thead>
+                <tbody id="saques-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ CONFIG ════ -->
+      <!-- ════ ADQUIRENTES ════ -->
+      <div id="page-adquirentes" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">Adquirentes</h2>
+        </div>
+
+        <!-- Cards dos provedores -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:28px">
+
+          <!-- EfiPay -->
+          <div class="card" style="border-color:rgba(99,179,237,0.25)">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(99,179,237,0.12);display:flex;align-items:center;justify-content:center;font-size:18px"></div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:14px">EfiPay</div>
+                <div class="text-sm text-muted">OAuth2 + mTLS (P12)</div>
+              </div>
+              <span class="badge badge-green" id="sa-status-efipay">Ativo</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;margin-bottom:16px">
+              <div class="flex justify-between"><span class="text-muted">Ambiente</span><span id="sa-env-efipay" class="badge badge-yellow">Sandbox</span></div>
+              <div class="flex justify-between"><span class="text-muted">Taxa MDR Pix</span><span style="font-weight:600">0,99%</span></div>
+              <div class="flex justify-between"><span class="text-muted">Liquidação</span><span style="font-weight:600">D+1</span></div>
+              <div class="flex justify-between"><span class="text-muted">Limite diário</span><span style="font-weight:600">R$ 500.000</span></div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost btn-sm" onclick="testProvider('efipay')">Testar conexão</button>
+              <button class="btn btn-ghost btn-sm" onclick="openModal('modal-sa-efipay')">Configurar</button>
+            </div>
+          </div>
+
+          <!-- Mercado Pago -->
+          <div class="card" style="border-color:rgba(99,230,114,0.2)">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(99,230,114,0.1);display:flex;align-items:center;justify-content:center;font-size:18px"></div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:14px">Mercado Pago</div>
+                <div class="text-sm text-muted">Bearer Access Token</div>
+              </div>
+              <span class="badge badge-gray" id="sa-status-mercadopago">Inativo</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;margin-bottom:16px">
+              <div class="flex justify-between"><span class="text-muted">Ambiente</span><span id="sa-env-mercadopago" class="badge badge-yellow">Sandbox</span></div>
+              <div class="flex justify-between"><span class="text-muted">Taxa MDR Pix</span><span style="font-weight:600">1,19%</span></div>
+              <div class="flex justify-between"><span class="text-muted">Liquidação</span><span style="font-weight:600">D+0</span></div>
+              <div class="flex justify-between"><span class="text-muted">Limite diário</span><span style="font-weight:600">R$ 100.000</span></div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost btn-sm" onclick="testProvider('mercadopago')">Testar conexão</button>
+              <button class="btn btn-ghost btn-sm" onclick="openModal('modal-sa-mercadopago')">Configurar</button>
+            </div>
+          </div>
+
+          <!-- Stone -->
+          <div class="card" style="border-color:rgba(168,85,247,0.2)">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;font-size:18px"></div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:14px">Stone</div>
+                <div class="text-sm text-muted">OAuth2 + JWT RS256</div>
+              </div>
+              <span class="badge badge-gray" id="sa-status-stone">Inativo</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;margin-bottom:16px">
+              <div class="flex justify-between"><span class="text-muted">Ambiente</span><span id="sa-env-stone" class="badge badge-yellow">Sandbox</span></div>
+              <div class="flex justify-between"><span class="text-muted">Taxa MDR Pix</span><span style="font-weight:600">1,09%</span></div>
+              <div class="flex justify-between"><span class="text-muted">Liquidação</span><span style="font-weight:600">D+1</span></div>
+              <div class="flex justify-between"><span class="text-muted">Acesso Pix</span><span class="badge badge-yellow" style="font-size:10px">Alpha</span></div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost btn-sm" onclick="testProvider('stone')">Testar conexão</button>
+              <button class="btn btn-ghost btn-sm" onclick="openModal('modal-sa-stone')">Configurar</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Provedor ativo -->
+        <div class="table-card" style="padding:20px;margin-bottom:24px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:14px">Provedor ativo</div>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;gap:14px">
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px">
+                <input type="radio" name="sa-active-provider" value="efipay" checked onchange="setActiveProvider(this.value)"> EfiPay
+              </label>
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px">
+                <input type="radio" name="sa-active-provider" value="mercadopago" onchange="setActiveProvider(this.value)"> Mercado Pago
+              </label>
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px">
+                <input type="radio" name="sa-active-provider" value="stone" onchange="setActiveProvider(this.value)"> Stone
+              </label>
+            </div>
+            <span class="text-muted text-sm">Alteração requer reinício do servidor (variável <code style="font-family:monospace;font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:4px">PAYMENT_PROVIDER</code> no .env)</span>
+          </div>
+        </div>
+
+        <!-- URLs de Webhook -->
+        <div class="table-card" style="padding:20px;margin-bottom:24px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:14px">URLs de Webhook</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+              <span class="text-muted" style="width:110px;flex-shrink:0">EfiPay</span>
+              <div class="product-link-row" style="flex:1">
+                <span class="product-link-text" id="sa-wh-efipay">/webhook/efipay</span>
+                <span class="product-link-copy" onclick="copyToClipboard(document.getElementById('sa-wh-efipay').textContent,'URL copiada!')">Copiar</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+              <span class="text-muted" style="width:110px;flex-shrink:0">Mercado Pago</span>
+              <div class="product-link-row" style="flex:1">
+                <span class="product-link-text" id="sa-wh-mp">/webhook/mercadopago</span>
+                <span class="product-link-copy" onclick="copyToClipboard(document.getElementById('sa-wh-mp').textContent,'URL copiada!')">Copiar</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+              <span class="text-muted" style="width:110px;flex-shrink:0">Stone</span>
+              <div class="product-link-row" style="flex:1">
+                <span class="product-link-text" id="sa-wh-stone">/webhook/stone</span>
+                <span class="product-link-copy" onclick="copyToClipboard(document.getElementById('sa-wh-stone').textContent,'URL copiada!')">Copiar</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health / Status em tempo real -->
+        <div class="table-card" style="padding:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <span style="font-weight:700;font-size:14px">Status do Gateway</span>
+            <button class="btn btn-ghost btn-sm" onclick="checkGatewayHealth()">Verificar agora</button>
+          </div>
+          <div id="sa-health-result" style="font-size:13px;color:var(--text3)">Clique em "Verificar agora" para consultar o servidor.</div>
+        </div>
+      </div>
+
+      <div id="page-config" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">Configurações Globais</h2>
+        </div>
+
+        <!-- Taxas MDR -->
+        <div class="table-card mb-24">
+          <div class="chart-header" style="padding:16px 16px 0">
+            <span class="chart-title">Taxas MDR por Tier</span>
+            <button class="btn btn-blue btn-sm" onclick="showToast('Taxas salvas!','success')">Salvar alterações</button>
+          </div>
+          <div class="table-wrap">
+            <table class="tier-table">
+              <thead><tr><th>Tier</th><th>MDR Pix (%)</th><th>Saque (%)</th><th>Limite/Transação</th><th>Limite/Dia</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Básico</td>
+                  <td><input class="filter-input" value="1.99" style="width:80px"/></td>
+                  <td><input class="filter-input" value="0.50" style="width:80px"/></td>
+                  <td><input class="filter-input" value="5.000,00" style="width:110px"/></td>
+                  <td><input class="filter-input" value="20.000,00" style="width:110px"/></td>
+                </tr>
+                <tr>
+                  <td>Pro</td>
+                  <td><input class="filter-input" value="1.49" style="width:80px"/></td>
+                  <td><input class="filter-input" value="0.35" style="width:80px"/></td>
+                  <td><input class="filter-input" value="50.000,00" style="width:110px"/></td>
+                  <td><input class="filter-input" value="200.000,00" style="width:110px"/></td>
+                </tr>
+                <tr>
+                  <td>Enterprise</td>
+                  <td><input class="filter-input" value="0.99" style="width:80px"/></td>
+                  <td><input class="filter-input" value="0.20" style="width:80px"/></td>
+                  <td><input class="filter-input" value="500.000,00" style="width:110px"/></td>
+                  <td><input class="filter-input" value="2.000.000,00" style="width:110px"/></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Whitelist/Blacklist -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+          <div class="table-card">
+            <div class="chart-header" style="padding:16px 16px 0">
+              <span class="chart-title">Blacklist CPF/CNPJ</span>
+              <button class="btn btn-danger btn-sm" onclick="openModal('modal-blacklist')">+ Adicionar</button>
+            </div>
+            <div style="padding:12px 0">
+              <div id="blacklist-items"></div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="chart-header" style="padding:16px 16px 0">
+              <span class="chart-title">Whitelist CPF/CNPJ</span>
+              <button class="btn btn-success btn-sm" onclick="openModal('modal-whitelist')">+ Adicionar</button>
+            </div>
+            <div style="padding:12px 0">
+              <div id="whitelist-items"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- ════ MODAL: SA EFIPAY CONFIG ════ -->
+<div class="modal-overlay" id="modal-sa-efipay">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">EfiPay — Configuração</span>
+      <button class="modal-close" onclick="closeModal('modal-sa-efipay')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="input-group">
+        <label class="input-label">Client ID</label>
+        <input id="sa-efi-client-id" class="input" type="text" placeholder="Client_ID_..."/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Client Secret</label>
+        <input id="sa-efi-client-secret" class="input" type="password" placeholder="Client_Secret_..."/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Chave Pix (recebimento)</label>
+        <input id="sa-efi-pix-key" class="input" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Caminho do Certificado P12</label>
+        <input id="sa-efi-cert-path" class="input" type="text" placeholder="./certs/efipay-homolog.p12"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Senha do Certificado</label>
+        <input id="sa-efi-cert-pass" class="input" type="password" placeholder="Deixe vazio se não houver"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Ambiente</label>
+        <select id="sa-efi-env" class="input">
+          <option value="sandbox">Sandbox (homologação)</option>
+          <option value="production">Produção</option>
+        </select>
+      </div>
+      <div style="background:var(--blue-dim);border:1px solid rgba(99,179,237,0.2);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
+        Gere as credenciais em <strong>app.sejaefi.com.br → API → Aplicações</strong>. O certificado P12 é obtido em <strong>API → Certificados</strong>.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-sa-efipay')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProviderConfig('efipay')">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: SA MERCADO PAGO CONFIG ════ -->
+<div class="modal-overlay" id="modal-sa-mercadopago">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">Mercado Pago — Configuração</span>
+      <button class="modal-close" onclick="closeModal('modal-sa-mercadopago')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="input-group">
+        <label class="input-label">Access Token</label>
+        <input id="sa-mp-access-token" class="input" type="password" placeholder="APP_USR-... ou TEST-..."/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Webhook Secret</label>
+        <input id="sa-mp-webhook-secret" class="input" type="password" placeholder="Chave secreta configurada no painel MP"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Ambiente</label>
+        <select id="sa-mp-env" class="input">
+          <option value="sandbox">Sandbox (token TEST-...)</option>
+          <option value="production">Produção (token APP_USR-...)</option>
+        </select>
+      </div>
+      <div style="background:var(--green-dim);border:1px solid rgba(34,197,94,0.15);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
+        Gere o Access Token em <strong>mercadopago.com.br/developers → Credenciais</strong>. O Webhook Secret é criado em <strong>Webhooks → Configurar</strong>.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-sa-mercadopago')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProviderConfig('mercadopago')">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: SA STONE CONFIG ════ -->
+<div class="modal-overlay" id="modal-sa-stone">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">Stone — Configuração</span>
+      <button class="modal-close" onclick="closeModal('modal-sa-stone')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="input-group">
+        <label class="input-label">Client ID</label>
+        <input id="sa-stone-client-id" class="input" type="text" placeholder="UUID da aplicação Stone"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Account ID</label>
+        <input id="sa-stone-account-id" class="input" type="text" placeholder="ID da conta Stone"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Chave Pix (recebimento)</label>
+        <input id="sa-stone-pix-key" class="input" type="text" placeholder="Chave Pix cadastrada na Stone"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Caminho da Chave Privada RSA (PEM)</label>
+        <input id="sa-stone-key-path" class="input" type="text" placeholder="./certs/stone-private.pem"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Ambiente</label>
+        <select id="sa-stone-env" class="input">
+          <option value="sandbox">Sandbox</option>
+          <option value="production">Produção</option>
+        </select>
+      </div>
+      <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
+        <strong>Pix Stone está em Alpha</strong> — solicite acesso em <strong>parcerias@openbank.stone.com.br</strong>. Gere a chave RSA 4096 com: <code style="font-family:monospace;background:var(--bg3);padding:1px 4px;border-radius:3px">openssl genrsa -out stone-private.pem 4096</code>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-sa-stone')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProviderConfig('stone')">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: VENDOR DETAIL ════ -->
+<div class="modal-overlay" id="modal-vendor">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <span class="modal-title" id="mv-title">Detalhes do Vendedor</span>
+      <button class="modal-close" onclick="closeModal('modal-vendor')">×</button>
+    </div>
+    <div id="mv-body"></div>
+  </div>
+</div>
+
+<!-- ════ MODAL: REEMBOLSO ════ -->
+<div class="modal-overlay" id="modal-refund">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">⚠️ Confirmar Reembolso Forçado</span>
+      <button class="modal-close" onclick="closeModal('modal-refund')">×</button>
+    </div>
+    <p style="color:var(--text2);font-size:14px;line-height:1.6">Você está prestes a forçar o reembolso da transação <strong id="refund-id" style="color:var(--text)"></strong>. Esta ação é irreversível e o valor será devolvido ao pagador imediatamente.</p>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-refund')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmRefund()">Confirmar Reembolso</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: BLACKLIST ════ -->
+<div class="modal-overlay" id="modal-blacklist">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Adicionar à Blacklist</span>
+      <button class="modal-close" onclick="closeModal('modal-blacklist')">×</button>
+    </div>
+    <div class="input-group">
+      <label class="input-label">CPF ou CNPJ</label>
+      <input id="bl-doc" class="input" type="text" placeholder="000.000.000-00 ou 00.000.000/0001-00"/>
+    </div>
+    <div class="input-group mt-12">
+      <label class="input-label">Motivo</label>
+      <input id="bl-motivo" class="input" type="text" placeholder="Ex: Fraude confirmada"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-blacklist')">Cancelar</button>
+      <button class="btn btn-danger" onclick="addBlacklist()">Adicionar à blacklist</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: WHITELIST ════ -->
+<div class="modal-overlay" id="modal-whitelist">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Adicionar à Whitelist</span>
+      <button class="modal-close" onclick="closeModal('modal-whitelist')">×</button>
+    </div>
+    <div class="input-group">
+      <label class="input-label">CPF ou CNPJ</label>
+      <input id="wl-doc" class="input" type="text" placeholder="000.000.000-00 ou 00.000.000/0001-00"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-whitelist')">Cancelar</button>
+      <button class="btn btn-success" onclick="addWhitelist()">Adicionar à whitelist</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/charts.js"></script>
+<script>
+Session.require('superadmin');
+Theme.init();
+
+/* ── NAV ── */
+function nav(page, el) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const activeEl = el || document.querySelector(`.nav-item[onclick*="'${page}'"]`);
+  if (activeEl) activeEl.classList.add('active');
+  const labels = { dashboard:'Dashboard', vendedores:'Vendedores', transacoes:'Transações Globais',
+                   meds:'MEDs / Disputas', financeiro:'Financeiro', config:'Configurações',
+                   adquirentes:'Adquirentes' };
+  document.getElementById('breadcrumb-text').textContent = labels[page] || page;
+  closeAllDropdowns();
+}
+
+function toggleDropdown(id) {
+  const dd = document.getElementById(id);
+  const isOpen = dd.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) dd.classList.add('open');
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.relative')) closeAllDropdowns();
+});
+
+function switchTab(btn) {
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Rebuild volume chart with selected period
+  const period = btn.textContent.trim();
+  const canvasId = 'vol-chart';
+  if (document.getElementById(canvasId)) {
+    const inst = Object.values(Chart.instances).find(c => c.canvas.id === canvasId);
+    if (inst) inst.destroy();
+    const days7  = ['19/03','20/03','21/03','22/03','23/03','24/03','25/03'];
+    const vol7   = [842300,920100,778400,1124000,985000,1340200,1198000];
+    const days30 = Array.from({length:30},(_,i)=>`${i+1}/03`);
+    const vol30  = days30.map(()=>Math.round(700000+Math.random()*700000));
+    const days90 = ['Jan','Fev','Mar'];
+    const vol90  = [18400000,22100000,28700000];
+    const isD30 = period==='30d', isD90 = period==='90d';
+    const labels = isD90 ? days90 : isD30 ? days30 : days7;
+    const data   = isD90 ? vol90  : isD30 ? vol30  : vol7;
+    const volCtx = document.getElementById(canvasId).getContext('2d');
+    const grad = volCtx.createLinearGradient(0,0,0,220);
+    grad.addColorStop(0,'rgba(96,165,250,0.18)');
+    grad.addColorStop(1,'rgba(96,165,250,0)');
+    createLineChart(document.getElementById(canvasId), labels, [{
+      label:'Volume', data, borderColor:'#60a5fa', backgroundColor:grad, fill:true
+    }], { currency:true });
+  }
+}
+
+/* ── MOCK DATA ── */
+const VENDORS = [
+  { nome:'Loja do João',    cnpj:'12.345.678/0001-90', vol:248400, chargebk:'0.8%', status:'Ativo',      desde:'2023-05-12' },
+  { nome:'Tech Soluções',   cnpj:'98.765.432/0001-21', vol:189200, chargebk:'1.2%', status:'Ativo',      desde:'2023-08-01' },
+  { nome:'Digital Store',   cnpj:'11.222.333/0001-44', vol:145800, chargebk:'2.1%', status:'Em análise', desde:'2024-01-15' },
+  { nome:'Cursos Online BR', cnpj:'44.555.666/0001-77', vol:380000, chargebk:'0.4%', status:'Ativo',     desde:'2022-11-20' },
+  { nome:'SaaS Plus',       cnpj:'77.888.999/0001-11', vol:92000,  chargebk:'0.6%', status:'Ativo',      desde:'2024-03-01' },
+  { nome:'Marketologia',    cnpj:'33.444.555/0001-66', vol:54000,  chargebk:'3.8%', status:'Suspenso',   desde:'2023-02-28' },
+  { nome:'EduTech Brasil',  cnpj:'22.333.444/0001-55', vol:217600, chargebk:'0.9%', status:'Ativo',      desde:'2023-06-10' },
+  { nome:'Infopro',         cnpj:'55.666.777/0001-88', vol:168000, chargebk:'1.5%', status:'Ativo',      desde:'2023-09-05' },
+];
+
+const GLOBAL_TXNS = generateTxns(40);
+const VENDOR_NAMES = VENDORS.map(v => v.nome);
+GLOBAL_TXNS.forEach((t, i) => { t.vendedor = VENDOR_NAMES[i % VENDOR_NAMES.length]; });
+
+const MEDS_DATA = [
+  { id:'MED-001', vendedor:'Loja do João',     valor:1290.00, motivo:'Produto não entregue', prioridade:'critico',  data:'2025-03-25' },
+  { id:'MED-002', vendedor:'SaaS Plus',         valor:349.90,  motivo:'Cobrança duplicada',  prioridade:'normal',   data:'2025-03-24' },
+  { id:'MED-003', vendedor:'Digital Store',     valor:799.00,  motivo:'Não reconhece compra', prioridade:'critico', data:'2025-03-24' },
+  { id:'MED-004', vendedor:'Tech Soluções',     valor:2100.00, motivo:'Fraude alegada',       prioridade:'critico', data:'2025-03-23' },
+  { id:'MED-005', vendedor:'Cursos Online BR',  valor:197.00,  motivo:'Cancelamento negado', prioridade:'normal',   data:'2025-03-22' },
+  { id:'MED-006', vendedor:'Marketologia',      valor:540.00,  motivo:'Produto com defeito',  prioridade:'resolvido',data:'2025-03-20' },
+  { id:'MED-007', vendedor:'EduTech Brasil',    valor:890.00,  motivo:'Serviço não prestado', prioridade:'critico', data:'2025-03-20' },
+];
+
+const SAQUES_DATA = [
+  { vendedor:'Loja do João',    valor:12400.00, data:'2025-03-25 14:22' },
+  { vendedor:'Cursos Online BR', valor:45000.00, data:'2025-03-25 11:05' },
+  { vendedor:'EduTech Brasil',  valor:8700.00,  data:'2025-03-24 16:44' },
+  { vendedor:'Tech Soluções',   valor:22000.00, data:'2025-03-24 09:30' },
+];
+
+/* ── RENDER: TOP VENDORS ── */
+function renderTopVendors() {
+  const tbody = document.getElementById('top-vendors-body');
+  const top = [...VENDORS].sort((a,b) => b.vol - a.vol).slice(0, 5);
+  tbody.innerHTML = top.map((v, i) => `
+    <tr class="clickable" onclick="showVendorDetail(${VENDORS.indexOf(v)})">
+      <td><span style="color:var(--text3);font-weight:700">#${i+1}</span></td>
+      <td><span style="font-weight:600">${v.nome}</span></td>
+      <td style="font-family:var(--font-mono)">${fmt(v.vol)}</td>
+      <td>${Math.floor(v.vol / 120)}</td>
+      <td><span class="text-green fw-600">${(94 + Math.random()).toFixed(1)}%</span></td>
+      <td><span class="badge badge-${v.status==='Ativo'?'green':v.status==='Suspenso'?'red':'yellow'}">${v.status}</span></td>
+    </tr>`).join('');
+}
+
+/* ── RENDER: VENDORS TABLE ── */
+let vendorPage = 0;
+const perPage = 6;
+
+function renderVendors() {
+  const text   = document.getElementById('vendor-filter-text')?.value.trim() || '';
+  const status = document.getElementById('vendor-filter-status')?.value || '';
+  const filtered = VENDORS.filter(v =>
+    (!text   || v.nome.toLowerCase().includes(text.toLowerCase()) || v.cnpj.includes(text)) &&
+    (!status || v.status === status));
+  const start = vendorPage * perPage;
+  const tbody = document.getElementById('vendors-body');
+  tbody.innerHTML = filtered.slice(start, start + perPage).map((v, i) => `
+    <tr class="clickable" onclick="showVendorDetail(${VENDORS.indexOf(v)})">
+      <td><span style="font-weight:600">${v.nome}</span></td>
+      <td class="text-mono">${v.cnpj}</td>
+      <td class="text-mono">${fmt(v.vol)}</td>
+      <td><span class="${parseFloat(v.chargebk) > 2 ? 'text-red' : 'text-muted'}">${v.chargebk}</span></td>
+      <td><span class="badge badge-${v.status==='Ativo'?'green':v.status==='Suspenso'?'red':'yellow'}">${v.status}</span></td>
+      <td class="text-muted">${fmtDate(v.desde, true)}</td>
+      <td>
+        <div class="action-row">
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();showVendorDetail(${VENDORS.indexOf(v)})">Detalhes</button>
+          <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();suspendVendor(${JSON.stringify(v.nome)})">Suspender</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  renderPagination('vendors-pag', filtered.length, perPage, vendorPage, p => { vendorPage = p; renderVendors(); });
+}
+
+function filterVendors() { vendorPage = 0; renderVendors(); }
+
+/* ── RENDER: GLOBAL TXNS ── */
+let txnPage = 0;
+
+function renderGlobalTxns() {
+  const text   = document.getElementById('gtxn-filter-text')?.value.trim() || '';
+  const vendor = document.getElementById('gtxn-filter-vendor')?.value.trim() || '';
+  const status = document.getElementById('gtxn-filter-status')?.value || '';
+  const from   = document.getElementById('gtxn-filter-from')?.value;
+  const to     = document.getElementById('gtxn-filter-to')?.value;
+  const filtered = GLOBAL_TXNS.filter(t => {
+    const matchText   = !text   || t.id.includes(text.toUpperCase()) || t.nome.toLowerCase().includes(text.toLowerCase());
+    const matchVendor = !vendor || t.vendedor.toLowerCase().includes(vendor.toLowerCase());
+    const matchStatus = !status || t.status === status;
+    const tDate = new Date(t.data);
+    const matchFrom = !from || tDate >= new Date(from);
+    const matchTo   = !to   || tDate <= new Date(to + 'T23:59:59');
+    return matchText && matchVendor && matchStatus && matchFrom && matchTo;
+  });
+  const start = txnPage * 10;
+  document.getElementById('global-txn-body').innerHTML = filtered.slice(start, start + 10).map(t => `
+    <tr>
+      <td class="text-mono">${t.id}</td>
+      <td class="text-muted">${t.vendedor}</td>
+      <td>${t.nome}</td>
+      <td class="text-mono fw-600">${fmt(t.valor)}</td>
+      <td><span class="badge badge-${t.status==='pago'?'green':t.status==='aguardando'?'yellow':t.status==='expirado'?'gray':'red'}">${t.status}</span></td>
+      <td class="text-muted">${fmtDate(t.data)}</td>
+      <td>
+        <button class="btn btn-danger btn-sm" onclick="openRefundModal('${t.id}')">Reembolso</button>
+      </td>
+    </tr>`).join('');
+  renderPagination('global-txn-pag', filtered.length, 10, txnPage, p => { txnPage = p; renderGlobalTxns(); });
+}
+
+function filterGlobalTxns() { txnPage = 0; renderGlobalTxns(); }
+
+function exportTxns() {
+  const text   = document.getElementById('gtxn-filter-text')?.value.trim() || '';
+  const vendor = document.getElementById('gtxn-filter-vendor')?.value.trim() || '';
+  const status = document.getElementById('gtxn-filter-status')?.value || '';
+  const from   = document.getElementById('gtxn-filter-from')?.value;
+  const to     = document.getElementById('gtxn-filter-to')?.value;
+  const data = GLOBAL_TXNS.filter(t => {
+    const matchText   = !text   || t.id.includes(text.toUpperCase()) || t.nome.toLowerCase().includes(text.toLowerCase());
+    const matchVendor = !vendor || t.vendedor.toLowerCase().includes(vendor.toLowerCase());
+    const matchStatus = !status || t.status === status;
+    const tDate = new Date(t.data);
+    const matchFrom = !from || tDate >= new Date(from);
+    const matchTo   = !to   || tDate <= new Date(to + 'T23:59:59');
+    return matchText && matchVendor && matchStatus && matchFrom && matchTo;
+  });
+  const rows = [['ID','Vendedor','Cliente','Valor','Status','Data'],
+    ...data.map(t => [t.id, t.vendedor, t.nome, fmt(t.valor), t.status, fmtDate(t.data)])];
+  downloadCSV(rows, 'transacoes-global.csv');
+}
+
+/* ── ADQUIRENTES ── */
+function initAdquirentes() {
+  if (typeof Gateway === 'undefined') return;
+  Gateway.health()
+    .then(h => {
+      const prov = h.provider;
+      const env  = h.env;
+      ['efipay','mercadopago','stone'].forEach(p => {
+        const statusBadge = document.getElementById('sa-status-' + p);
+        const envBadge    = document.getElementById('sa-env-' + p);
+        if (statusBadge) {
+          statusBadge.textContent = p === prov ? 'Ativo'   : 'Inativo';
+          statusBadge.className   = p === prov ? 'badge badge-green' : 'badge badge-gray';
+        }
+        if (envBadge && p === prov) {
+          envBadge.textContent = env === 'production' ? 'Produção' : 'Sandbox';
+          envBadge.className   = env === 'production' ? 'badge badge-green' : 'badge badge-yellow';
+        }
+      });
+      // Marca o radio correto
+      const radio = document.querySelector(`input[name="sa-active-provider"][value="${prov}"]`);
+      if (radio) radio.checked = true;
+      // Atualiza as URLs de webhook com a BASE real
+      const base = typeof window !== 'undefined' ? (window.PAYZAP_API_URL || '') : '';
+      ['efipay','mercadopago','stone'].forEach(p => {
+        const el = document.getElementById('sa-wh-' + (p === 'mercadopago' ? 'mp' : p));
+        if (el) el.textContent = base + '/webhook/' + p;
+      });
+    })
+    .catch(() => {});
+}
+
+function testProvider(provider) {
+  const names = { efipay:'EfiPay', mercadopago:'Mercado Pago', stone:'Stone' };
+  showToast(`Testando conexão com ${names[provider]}...`, 'info');
+  if (typeof Gateway === 'undefined') { showToast('Gateway não disponível', 'error'); return; }
+  Gateway.health()
+    .then(h => showToast(h.ok ? `${names[provider]} respondeu — ${h.env}` : `${names[provider]}: resposta inesperada`, h.ok ? 'success' : 'warning'))
+    .catch(() => showToast(`Falha ao conectar com ${names[provider]}`, 'error'));
+}
+
+function checkGatewayHealth() {
+  const el = document.getElementById('sa-health-result');
+  el.textContent = 'Consultando...';
+  if (typeof Gateway === 'undefined') { el.textContent = 'Gateway.js não carregado nesta página.'; return; }
+  Gateway.health()
+    .then(h => {
+      el.innerHTML = `<span style="color:var(--green);font-weight:600">● Online</span> &nbsp;·&nbsp; Provedor: <strong>${h.provider}</strong> &nbsp;·&nbsp; Ambiente: <strong>${h.env}</strong> &nbsp;·&nbsp; <span class="text-muted">${h.ts}</span>`;
+    })
+    .catch(() => {
+      el.innerHTML = `<span style="color:var(--red);font-weight:600">● Offline</span> &nbsp;·&nbsp; <span class="text-muted">Servidor não responde em ${window.PAYZAP_API_URL || 'http://localhost:3000'}</span>`;
+    });
+}
+
+async function loadConfig() {
+  try {
+    const res = await fetch((window.PAYZAP_API_URL || '') + '/api/config');
+    const data = await res.json();
+    if (data.ok && data.config) {
+      for (const [id, val] of Object.entries(data.config)) {
+        const el = document.getElementById(id);
+        if (el) {
+          if (el.type === 'radio') {
+            if (el.value === val) el.checked = true;
+          } else {
+            el.value = val;
+          }
+        }
+      }
+      // Se carregou o provedor ativo, atualiza os badges visuais
+      if (data.config['sa-active-provider']) {
+        updateActiveProviderBadges(data.config['sa-active-provider']);
+      }
+    }
+  } catch (err) {
+    console.error('Falha ao carregar config:', err);
+  }
+}
+
+async function saveProviderConfig(provider) {
+  const fields = {
+    efipay:      ['sa-efi-client-id','sa-efi-client-secret','sa-efi-pix-key','sa-efi-cert-path','sa-efi-cert-pass','sa-efi-env'],
+    mercadopago: ['sa-mp-access-token','sa-mp-webhook-secret','sa-mp-env'],
+    stone:       ['sa-stone-client-id','sa-stone-account-id','sa-stone-pix-key','sa-stone-key-path','sa-stone-env'],
+  };
+  
+  const body = {};
+  const missing = [];
+  
+  (fields[provider] || []).forEach(id => {
+    const val = document.getElementById(id)?.value.trim();
+    if (!val && id !== 'sa-efi-cert-pass') missing.push(id);
+    body[id] = val;
+  });
+
+  if (missing.length) {
+    showToast('Preencha os campos obrigatórios', 'warning');
+    document.getElementById(missing[0])?.focus();
+    return;
+  }
+
+  try {
+    showToast('Salvando...', 'info');
+    const res = await fetch((window.PAYZAP_API_URL || '') + '/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.ok) {
+      closeModal('modal-sa-' + provider);
+      showToast('Configuração salva com sucesso!', 'success');
+    } else {
+      showToast(data.message || 'Erro ao salvar', 'error');
+    }
+  } catch (err) {
+    showToast('Erro de conexão com o servidor', 'error');
+  }
+}
+
+function updateActiveProviderBadges(value) {
+  const names = { efipay:'EfiPay', mercadopago:'Mercado Pago', stone:'Stone' };
+  ['efipay','mercadopago','stone'].forEach(p => {
+    const b = document.getElementById('sa-status-' + p);
+    if (!b) return;
+    b.textContent = p === value ? 'Ativo'   : 'Inativo';
+    b.className   = p === value ? 'badge badge-green' : 'badge badge-gray';
+  });
+  
+  const radio = document.querySelector(`input[name="sa-active-provider"][value="${value}"]`);
+  if (radio) radio.checked = true;
+}
+
+async function setActiveProvider(value) {
+  updateActiveProviderBadges(value);
+  try {
+    await fetch((window.PAYZAP_API_URL || '') + '/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 'sa-active-provider': value })
+    });
+    showToast(`Provedor alterado para ${value.toUpperCase()}`, 'success');
+  } catch (err) {
+    showToast('Erro ao atualizar provedor ativo', 'error');
+  }
+}
+
+/* ── RENDER: MEDs ── */
+function filterMEDs(type, btn) {
+  if (btn) {
+    btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const data = type === 'critico'   ? MEDS_DATA.filter(m => m.prioridade === 'critico')
+             : type === 'resolvido' ? MEDS_DATA.filter(m => m.prioridade === 'resolvido')
+             : MEDS_DATA;
+  renderMEDs(data);
+}
+
+function renderMEDs(data = MEDS_DATA) {
+  const list = document.getElementById('meds-list');
+  list.innerHTML = data.map(m => `
+    <div class="table-card mb-16 med-${m.prioridade}" style="padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:16px;padding:16px 20px">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <span style="font-weight:700;font-size:13px">${m.id}</span>
+            <span class="badge badge-${m.prioridade==='critico'?'red':m.prioridade==='normal'?'yellow':'green'}">${m.prioridade}</span>
+          </div>
+          <div style="font-size:13px;color:var(--text2)">${m.vendedor} · <strong style="color:var(--text)">${fmt(m.valor)}</strong> · ${m.motivo}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">${fmtDate(m.data, true)}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Defesa aceita — vendedor notificado','success')">Aceitar defesa</button>
+          <button class="btn btn-danger btn-sm" onclick="showToast('Estorno forçado registrado','warning')">Forçar estorno</button>
+          <button class="btn btn-success btn-sm" onclick="showToast('MED marcado como resolvido','success')">Resolver</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── RENDER: SAQUES ── */
+function renderSaques() {
+  document.getElementById('saques-body').innerHTML = SAQUES_DATA.map(s => `
+    <tr>
+      <td style="font-weight:600">${s.vendedor}</td>
+      <td class="text-mono">${fmt(s.valor)}</td>
+      <td class="text-muted text-sm">${fmtDate(s.data.replace(' ','T'))}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-success btn-sm" onclick="showToast('Saque de ${fmt(s.valor)} aprovado!','success')">Aprovar</button>
+          <button class="btn btn-danger btn-sm" onclick="showToast('Saque rejeitado.','error')">Rejeitar</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+/* ── RENDER: LISTS ── */
+const blacklist = ['123.456.789-00', '98.765.432/0001-21'];
+const whitelist  = ['111.222.333-44', 'Cursos Online BR — 44.555.666/0001-77'];
+
+function renderLists() {
+  ['blacklist','whitelist'].forEach(type => {
+    const arr = type === 'blacklist' ? blacklist : whitelist;
+    document.getElementById(type + '-items').innerHTML = arr.map((item, i) => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-bottom:1px solid var(--border)">
+        <span class="text-mono">${escHtml(item)}</span>
+        <button class="btn btn-ghost btn-sm" onclick="${type}.splice(${i},1);renderLists();showToast('Removido','info')">Remover</button>
+      </div>`).join('') || '<div style="padding:16px;color:var(--text3);font-size:13px">Nenhum registro</div>';
+  });
+}
+
+function addBlacklist() {
+  const doc = document.getElementById('bl-doc').value.trim();
+  if (!doc) return;
+  blacklist.push(doc); renderLists(); closeModal('modal-blacklist');
+  showToast('Adicionado à blacklist', 'success');
+}
+function addWhitelist() {
+  const doc = document.getElementById('wl-doc').value.trim();
+  if (!doc) return;
+  whitelist.push(doc); renderLists(); closeModal('modal-whitelist');
+  showToast('Adicionado à whitelist', 'success');
+}
+
+/* ── VENDOR DETAIL MODAL ── */
+function showVendorDetail(idx) {
+  const v = VENDORS[idx];
+  document.getElementById('mv-title').textContent = v.nome;
+  document.getElementById('mv-body').innerHTML = `
+    <div class="vendor-stats-grid">
+      <div class="vendor-stat">
+        <div class="vendor-stat-val text-blue">${fmt(v.vol)}</div>
+        <div class="vendor-stat-lbl">Volume Mensal</div>
+      </div>
+      <div class="vendor-stat">
+        <div class="vendor-stat-val">${Math.floor(v.vol / 120)}</div>
+        <div class="vendor-stat-lbl">Transações</div>
+      </div>
+      <div class="vendor-stat">
+        <div class="vendor-stat-val ${parseFloat(v.chargebk) > 2 ? 'text-red' : 'text-green'}">${v.chargebk}</div>
+        <div class="vendor-stat-lbl">Chargeback</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;font-size:13px">
+      <div><span class="text-muted">CNPJ:</span> <span class="text-mono">${v.cnpj}</span></div>
+      <div><span class="text-muted">Status:</span> <span class="badge badge-${v.status==='Ativo'?'green':v.status==='Suspenso'?'red':'yellow'}">${v.status}</span></div>
+      <div><span class="text-muted">Desde:</span> ${fmtDate(v.desde, true)}</div>
+      <div><span class="text-muted">Tier:</span> <span class="badge badge-blue">Pro</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="flex items-center justify-between mb-12">
+      <span style="font-weight:600;font-size:14px">Taxa MDR personalizada</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+      <div class="input-group">
+        <label class="input-label">MDR Pix (%)</label>
+        <input class="input" value="1.49" type="text"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Taxa de Saque (%)</label>
+        <input class="input" value="0.35" type="text"/>
+      </div>
+    </div>
+    <div class="flex gap-8">
+      <button class="btn btn-blue btn-sm" onclick="showToast('Taxa salva para ' + ${JSON.stringify(v.nome)},'success')">Salvar taxa</button>
+      <button class="btn btn-danger btn-sm" onclick="suspendVendor(${JSON.stringify(v.nome)})">Suspender vendedor</button>
+    </div>
+    <div class="divider"></div>
+    <div style="font-weight:600;font-size:14px;margin-bottom:12px">Últimas transações</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
+        <tbody>
+          ${generateTxns(5).map(t => `
+            <tr>
+              <td class="text-mono">${t.id}</td>
+              <td class="text-mono">${fmt(t.valor)}</td>
+              <td><span class="badge badge-${t.status==='pago'?'green':t.status==='aguardando'?'yellow':'gray'}">${t.status}</span></td>
+              <td class="text-muted">${fmtDate(t.data)}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  openModal('modal-vendor');
+}
+
+function suspendVendor(nome) {
+  closeModal('modal-vendor');
+  showToast(`Vendedor "${nome}" suspenso.`, 'warning');
+}
+
+/* ── REFUND MODAL ── */
+function openRefundModal(id) {
+  document.getElementById('refund-id').textContent = id;
+  openModal('modal-refund');
+}
+function confirmRefund() {
+  closeModal('modal-refund');
+  showToast('Reembolso forçado realizado com sucesso.', 'success');
+}
+
+/* ── PAGINATION ── */
+function renderPagination(containerId, total, perP, current, onPage) {
+  const totalPages = Math.ceil(total / perP);
+  const container = document.getElementById(containerId);
+  if (totalPages <= 1) {
+    container.innerHTML = total === 0 ? '<span style="font-size:12px;color:var(--text3)">Nenhum resultado encontrado</span>' : '';
+    return;
+  }
+
+  let btns = `<button class="page-btn" ${current===0?'disabled':''} onclick="(${onPage.toString()})(${current-1})">‹</button>`;
+  for (let i = 0; i < totalPages; i++) {
+    if (totalPages > 7 && Math.abs(i - current) > 2 && i !== 0 && i !== totalPages-1) {
+      if (i === 1 || i === totalPages-2) btns += `<button class="page-btn" disabled>…</button>`;
+      continue;
+    }
+    btns += `<button class="page-btn ${i===current?'active':''}" onclick="(${onPage.toString()})(${i})">${i+1}</button>`;
+  }
+  btns += `<button class="page-btn" ${current===totalPages-1?'disabled':''} onclick="(${onPage.toString()})(${current+1})">›</button>`;
+  container.innerHTML = btns;
+  container.insertAdjacentHTML('afterbegin', `<span style="flex:1;font-size:12px;color:var(--text3)">Mostrando ${current*perP+1}–${Math.min((current+1)*perP, total)} de ${total}</span>`);
+}
+
+/* ── CHARTS ── */
+function initCharts() {
+  // Destroy existing instances
+  ['vol-chart','status-chart','mdr-chart'].forEach(id => {
+    const inst = Object.values(Chart.instances).find(c => c.canvas.id === id);
+    if (inst) inst.destroy();
+  });
+
+  const days = ['19/03','20/03','21/03','22/03','23/03','24/03','25/03'];
+  const volData = [842300, 920100, 778400, 1124000, 985000, 1340200, 1198000];
+
+  const volCtx = document.getElementById('vol-chart').getContext('2d');
+  const grad = volCtx.createLinearGradient(0, 0, 0, 220);
+  grad.addColorStop(0, 'rgba(96,165,250,0.18)');
+  grad.addColorStop(1, 'rgba(96,165,250,0)');
+
+  createLineChart(document.getElementById('vol-chart'), days, [{
+    label: 'Volume',
+    data: volData,
+    borderColor: '#60a5fa',
+    backgroundColor: grad,
+    fill: true
+  }], { currency: true });
+
+  createDoughnutChart(document.getElementById('status-chart'),
+    ['Aprovado', 'Expirado', 'Cancelado', 'Aguardando'],
+    [74, 14, 8, 4],
+    ['#30d158', '#555d72', '#ff453a', '#ffd60a']
+  );
+
+  const mdrDays = Array.from({length:30}, (_,i) => `${i+1}/03`);
+  const mdrData = mdrDays.map(() => Math.round(7000 + Math.random() * 5000));
+
+  createBarChart(document.getElementById('mdr-chart'), mdrDays, [{
+    label: 'Receita MDR',
+    data: mdrData,
+    backgroundColor: 'rgba(96,165,250,0.5)',
+    borderColor: '#60a5fa',
+    borderWidth: 1
+  }], { currency: true });
+}
+
+/* ── INIT ── */
+renderTopVendors();
+renderVendors();
+renderGlobalTxns();
+renderMEDs();
+renderSaques();
+renderLists();
+initCharts();
+initAdquirentes();
+loadConfig();
+</script>
+</body>
+</html>

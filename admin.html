@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayZap — Painel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <link rel="stylesheet" href="pages/admin/style.css"/>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1.5L14 13H2L8 1.5Z" fill="white" opacity="0.95"/>
+          <path d="M8 5.5L11 11H5L8 5.5Z" fill="rgba(0,0,0,0.25)"/>
+        </svg>
+      </div>
+      <span class="logo-name">PayZap</span>
+    </div>
+
+    <div class="sidebar-section">Principal</div>
+    <div class="nav-item active" onclick="nav('painel',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Painel
+    </div>
+    <div class="nav-item" onclick="nav('transacoes',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      Transações
+    </div>
+    <div class="nav-item" onclick="nav('produtos',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Produtos
+    </div>
+
+    <div class="sidebar-section">Conta</div>
+    <div class="nav-item" onclick="nav('saldo',this)">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Saldo & Saques
+    </div>
+    <div class="nav-item" onclick="showToast('Em desenvolvimento','info')">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Configurações
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="toggleDropdown('sidebar-user-dd')" style="position:relative">
+        <div class="avatar">MS</div>
+        <div>
+          <div class="sidebar-user-name">Maria Silva</div>
+          <div class="sidebar-user-role">Vendedor</div>
+        </div>
+        <div class="dropdown" id="sidebar-user-dd" style="bottom:calc(100% + 8px);top:auto">
+          <div class="dropdown-item danger" onclick="logout()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sair
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>PayZap</span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current" id="breadcrumb-text">Painel</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn theme-btn" onclick="Theme.toggle()"></button>
+        <div class="relative">
+          <button class="icon-btn" onclick="toggleDropdown('notif-dd')" title="Notificações">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-badge">3</span>
+          </button>
+          <div class="dropdown" id="notif-dd" style="width:280px">
+            <div style="padding:8px 10px 4px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase">Notificações</div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item"><span>✅</span><div><div style="color:var(--text);font-size:12px;font-weight:600">Pagamento de R$ 890,00 confirmado</div><div style="font-size:11px;color:var(--text3)">Há 5 min</div></div></div>
+            <div class="dropdown-item"><span>💰</span><div><div style="color:var(--text);font-size:12px;font-weight:600">Saque de R$ 2.400 processado</div><div style="font-size:11px;color:var(--text3)">Há 2h</div></div></div>
+          </div>
+        </div>
+        <div class="relative">
+          <button class="avatar-btn" onclick="toggleDropdown('avatar-dd')">MS</button>
+          <div class="dropdown" id="avatar-dd">
+            <div class="dropdown-item" onclick="showToast('Em desenvolvimento','info')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Meu perfil
+            </div>
+            <div class="dropdown-item" onclick="showToast('Em desenvolvimento','info')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.38 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.12 6.12l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Suporte
+            </div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item danger" onclick="logout()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sair
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ════ PAINEL ════ -->
+      <div id="page-painel" class="page-section active">
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--green-dim)">💰</div>
+            <div class="kpi-label">Receita do Mês</div>
+            <div class="kpi-value">R$ 48.240</div>
+            <div class="kpi-delta delta-up">▲ +12% vs mês anterior</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--blue-dim)">🔄</div>
+            <div class="kpi-label">Transações</div>
+            <div class="kpi-value">1.284</div>
+            <div class="kpi-delta delta-up">▲ +8% vs mês anterior</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--yellow-dim)">✅</div>
+            <div class="kpi-label">Taxa de Aprovação</div>
+            <div class="kpi-value">96,3%</div>
+            <div class="kpi-delta delta-up">▲ +1.2% vs mês anterior</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--red-dim)">💳</div>
+            <div class="kpi-label">Ticket Médio</div>
+            <div class="kpi-value">R$ 37,57</div>
+            <div class="kpi-delta delta-down">▼ -3% vs mês anterior</div>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Receita — Últimos 7 dias</span>
+              <div class="tabs">
+                <button class="tab-btn active">7d</button>
+                <button class="tab-btn" onclick="switchTab(this)">30d</button>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="revenue-chart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Status</span></div>
+            <div class="chart-wrap"><canvas id="status-chart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Mini transações recentes -->
+        <div class="table-card">
+          <div class="chart-header" style="padding:16px 16px 0">
+            <span class="chart-title">Últimas Transações</span>
+            <button class="btn btn-ghost btn-sm" onclick="nav('transacoes',null)">Ver todas</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Cliente</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
+              <tbody id="mini-txns"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ TRANSAÇÕES ════ -->
+      <div id="page-transacoes" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">Transações</h2>
+          <div class="flex gap-8">
+            <button class="btn btn-ghost btn-sm" onclick="exportMyTxns()">Exportar CSV</button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="filters-row">
+            <input id="txn-filter-text" class="filter-input" type="text" placeholder="Buscar por ID ou cliente..." oninput="filterTxns()" style="flex:1;min-width:180px"/>
+            <select id="txn-filter-status" class="filter-input" onchange="filterTxns()">
+              <option value="">Todos os status</option>
+              <option value="pago">pago</option><option value="expirado">expirado</option><option value="cancelado">cancelado</option><option value="aguardando">aguardando</option>
+            </select>
+            <input id="txn-filter-from" class="filter-input" type="date" title="Data inicial" onchange="filterTxns()"/>
+            <input id="txn-filter-to" class="filter-input" type="date" title="Data final" onchange="filterTxns()"/>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>ID</th><th>Cliente</th><th>CPF</th><th>Valor</th>
+                <th>Status</th><th>Descrição</th><th>Data</th>
+              </tr></thead>
+              <tbody id="txn-body"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="txn-pag"></div>
+        </div>
+      </div>
+
+      <!-- ════ PRODUTOS ════ -->
+      <div id="page-produtos" class="page-section">
+        <div class="section-hd">
+          <h2 class="section-title">Produtos & Links</h2>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-produto')">+ Criar produto</button>
+        </div>
+        <div class="products-grid" id="products-grid"></div>
+      </div>
+
+      <!-- ════ SALDO ════ -->
+      <div id="page-saldo" class="page-section">
+        <div class="section-hd"><h2 class="section-title">Saldo & Saques</h2></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+          <div class="card" style="background:linear-gradient(135deg,rgba(34,197,94,0.08),transparent);border-color:rgba(34,197,94,0.2)">
+            <div class="text-sm text-muted mb-8">Saldo disponível para saque</div>
+            <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--green);margin-bottom:16px">R$ 14.380,00</div>
+            <button class="btn btn-primary" onclick="openModal('modal-saque')">Solicitar saque</button>
+          </div>
+          <div class="card" style="display:flex;flex-direction:column;gap:6px">
+            <div class="text-sm text-muted">Último saque</div>
+            <div style="font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-0.04em">R$ 5.000,00</div>
+            <div class="text-sm" style="color:var(--green)">Processado · 25/03/2025</div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="chart-header" style="padding:16px 16px 0">
+            <span class="chart-title">Histórico de Saques</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Valor</th><th>Chave Pix</th><th>Status</th><th>Data</th></tr></thead>
+              <tbody>
+                <tr><td class="text-mono">SAQ-001</td><td class="text-mono">R$ 5.000,00</td><td class="text-muted">CPF ···.456.789-00</td><td><span class="badge badge-green">pago</span></td><td class="text-muted">25/03/2025</td></tr>
+                <tr><td class="text-mono">SAQ-002</td><td class="text-mono">R$ 2.400,00</td><td class="text-muted">CPF ···.456.789-00</td><td><span class="badge badge-green">pago</span></td><td class="text-muted">18/03/2025</td></tr>
+                <tr><td class="text-mono">SAQ-003</td><td class="text-mono">R$ 8.100,00</td><td class="text-muted">CPF ···.456.789-00</td><td><span class="badge badge-yellow">processando</span></td><td class="text-muted">10/03/2025</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- ════ DRAWER: TXN DETAIL ════ -->
+<div class="drawer-overlay" id="drawer-txn">
+  <div class="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title" id="drawer-txn-id">Detalhes da Transação</span>
+      <button class="modal-close" onclick="closeDrawer('drawer-txn')">×</button>
+    </div>
+    <div class="drawer-body" id="drawer-txn-body"></div>
+  </div>
+</div>
+
+<!-- ════ MODAL: EFIPAY CONFIG ════ -->
+<div class="modal-overlay" id="modal-efipay">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">EfiPay — Configuração</span>
+      <button class="modal-close" onclick="closeModal('modal-efipay')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="input-group">
+        <label class="input-label">Client ID</label>
+        <input id="efi-client-id" class="input" type="text" placeholder="Client_ID_..."/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Client Secret</label>
+        <input id="efi-client-secret" class="input" type="password" placeholder="Client_Secret_..."/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Chave Pix (recebimento)</label>
+        <input id="efi-pix-key" class="input" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Caminho do Certificado P12</label>
+        <input id="efi-cert-path" class="input" type="text" placeholder="./certs/efipay-homolog.p12"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Senha do Certificado</label>
+        <input id="efi-cert-pass" class="input" type="password" placeholder="Deixe vazio se não houver"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Ambiente</label>
+        <select id="efi-env" class="input">
+          <option value="sandbox">Sandbox (homologação)</option>
+          <option value="production">Produção</option>
+        </select>
+      </div>
+      <div style="background:var(--blue-dim);border:1px solid rgba(99,179,237,0.2);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
+        Gere as credenciais em <strong>app.sejaefi.com.br → API → Aplicações</strong>. O certificado P12 é obtido em <strong>API → Certificados</strong>.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-efipay')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProviderConfig('efipay')">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: MERCADO PAGO CONFIG ════ -->
+<div class="modal-overlay" id="modal-mercadopago">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">Mercado Pago — Configuração</span>
+      <button class="modal-close" onclick="closeModal('modal-mercadopago')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="input-group">
+        <label class="input-label">Access Token</label>
+        <input id="mp-access-token" class="input" type="password" placeholder="APP_USR-... ou TEST-..."/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Webhook Secret</label>
+        <input id="mp-webhook-secret" class="input" type="password" placeholder="Chave secreta configurada no painel MP"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Ambiente</label>
+        <select id="mp-env" class="input">
+          <option value="sandbox">Sandbox (token TEST-...)</option>
+          <option value="production">Produção (token APP_USR-...)</option>
+        </select>
+      </div>
+      <div style="background:var(--green-dim);border:1px solid rgba(34,197,94,0.15);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
+        Gere o Access Token em <strong>mercadopago.com.br/developers → Credenciais</strong>. O Webhook Secret é criado em <strong>Webhooks → Configurar</strong>.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-mercadopago')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProviderConfig('mercadopago')">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: STONE CONFIG ════ -->
+<div class="modal-overlay" id="modal-stone">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">Stone — Configuração</span>
+      <button class="modal-close" onclick="closeModal('modal-stone')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="input-group">
+        <label class="input-label">Client ID</label>
+        <input id="stone-client-id" class="input" type="text" placeholder="UUID da aplicação Stone"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Account ID</label>
+        <input id="stone-account-id" class="input" type="text" placeholder="ID da conta Stone"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Chave Pix (recebimento)</label>
+        <input id="stone-pix-key" class="input" type="text" placeholder="Chave Pix cadastrada na Stone"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Caminho da Chave Privada RSA (PEM)</label>
+        <input id="stone-key-path" class="input" type="text" placeholder="./certs/stone-private.pem"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Ambiente</label>
+        <select id="stone-env" class="input">
+          <option value="sandbox">Sandbox</option>
+          <option value="production">Produção</option>
+        </select>
+      </div>
+      <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
+        <strong>Pix Stone está em Alpha</strong> — solicite acesso em <strong>parcerias@openbank.stone.com.br</strong>. Gere a chave RSA 4096 com: <code style="font-family:var(--font-mono,monospace);background:var(--bg3);padding:1px 4px;border-radius:3px">openssl genrsa -out stone-private.pem 4096</code>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-stone')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProviderConfig('stone')">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: PRODUTO ════ -->
+<div class="modal-overlay" id="modal-produto">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="prod-modal-title">Criar Produto</span>
+      <button class="modal-close" onclick="closeModal('modal-produto')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="input-group">
+        <label class="input-label">Nome do produto</label>
+        <input id="p-nome" class="input" type="text" placeholder="Ex: Curso de Marketing Digital"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Descrição</label>
+        <textarea id="p-desc" class="input" rows="3" placeholder="Descreva o produto..."></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="input-group">
+          <label class="input-label">Valor (R$)</label>
+          <input id="p-valor" class="input" type="text" placeholder="0,00"/>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Tipo</label>
+          <select id="p-tipo" class="input">
+            <option>Pagamento único</option>
+            <option>Assinatura mensal</option>
+            <option>Assinatura anual</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">URL da foto (opcional)</label>
+        <input id="p-foto" class="input" type="url" placeholder="https://..."/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-produto')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createProduct()">Criar produto</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODAL: SAQUE ════ -->
+<div class="modal-overlay" id="modal-saque">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Solicitar Saque</span>
+      <button class="modal-close" onclick="closeModal('modal-saque')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--green-dim);border:1px solid rgba(34,197,94,0.2);border-radius:var(--radius-sm);padding:14px;display:flex;align-items:center;justify-content:space-between">
+        <span class="text-sm text-muted">Disponível para saque</span>
+        <span style="font-weight:800;color:var(--green);font-family:var(--font-display)">R$ 14.380,00</span>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Valor do saque</label>
+        <input id="saque-valor" class="input" type="text" placeholder="0,00"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Chave Pix</label>
+        <input id="saque-pix" class="input" type="text" placeholder="CPF, e-mail ou chave aleatória"/>
+      </div>
+      <p class="text-sm text-muted">O valor será creditado em até 1 dia útil. Taxa: 0,35%.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-saque')">Cancelar</button>
+      <button class="btn btn-primary" onclick="requestWithdraw()">Solicitar saque</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/charts.js"></script>
+<script>
+Session.require('vendedor');
+Theme.init();
+
+/* ── NAV ── */
+function nav(page, el) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const activeEl = el || document.querySelector(`.nav-item[onclick*="'${page}'"]`);
+  if (activeEl) activeEl.classList.add('active');
+  const labels = { painel:'Painel', transacoes:'Transações', produtos:'Produtos & Links',
+                   saldo:'Saldo & Saques', adquirentes:'Adquirentes' };
+  document.getElementById('breadcrumb-text').textContent = labels[page] || page;
+  closeAllDropdowns();
+}
+
+function toggleDropdown(id) {
+  const dd = document.getElementById(id);
+  const isOpen = dd.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) dd.classList.add('open');
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.relative') && !e.target.closest('.sidebar-user')) closeAllDropdowns();
+});
+
+function switchTab(btn) {
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Rebuild revenue chart with selected period
+  const period = btn.textContent.trim();
+  if (document.getElementById('revenue-chart')) {
+    const instance = Object.values(Chart.instances).find(c => c.canvas.id === 'revenue-chart');
+    if (instance) instance.destroy();
+    const days30 = ['25/02','01/03','05/03','09/03','13/03','17/03','21/03','25/03','27/03','28/03','29/03'];
+    const rev30  = [3200,4800,5200,3900,7100,6400,8200,7600,5800,9100,7200];
+    const days7  = ['19/03','20/03','21/03','22/03','23/03','24/03','25/03'];
+    const rev7   = [4800,5200,3900,7100,6400,8200,7600];
+    const labels  = period === '30d' ? days30 : days7;
+    const revenue = period === '30d' ? rev30  : rev7;
+    const revCtx = document.getElementById('revenue-chart').getContext('2d');
+    const grad = revCtx.createLinearGradient(0, 0, 0, 200);
+    grad.addColorStop(0, 'rgba(230,57,70,0.18)');
+    grad.addColorStop(1, 'rgba(230,57,70,0)');
+    createLineChart(document.getElementById('revenue-chart'), labels, [{
+      label:'Receita', data:revenue, borderColor:'#e63946', backgroundColor:grad, fill:true
+    }], { currency:true });
+  }
+}
+
+/* ── MOCK DATA ── */
+const MY_TXNS = generateTxns(20);
+const QR_SVG = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="qr-mock">
+  <rect width="100" height="100" fill="white"/>
+  <rect x="10" y="10" width="30" height="30" fill="none" stroke="black" stroke-width="4"/>
+  <rect x="15" y="15" width="20" height="20" fill="black"/>
+  <rect x="60" y="10" width="30" height="30" fill="none" stroke="black" stroke-width="4"/>
+  <rect x="65" y="15" width="20" height="20" fill="black"/>
+  <rect x="10" y="60" width="30" height="30" fill="none" stroke="black" stroke-width="4"/>
+  <rect x="15" y="65" width="20" height="20" fill="black"/>
+  <rect x="45" y="10" width="4" height="4" fill="black"/><rect x="52" y="10" width="4" height="4" fill="black"/>
+  <rect x="45" y="17" width="4" height="4" fill="black"/><rect x="52" y="24" width="4" height="4" fill="black"/>
+  <rect x="60" y="45" width="4" height="4" fill="black"/><rect x="67" y="52" width="4" height="4" fill="black"/>
+  <rect x="74" y="45" width="4" height="4" fill="black"/><rect x="81" y="52" width="4" height="4" fill="black"/>
+  <rect x="60" y="59" width="4" height="4" fill="black"/><rect x="74" y="66" width="4" height="4" fill="black"/>
+  <rect x="67" y="73" width="4" height="4" fill="black"/><rect x="81" y="80" width="4" height="4" fill="black"/>
+</svg>`;
+
+let PRODUCTS = [
+  { id:'prod-001', nome:'Curso de Marketing Digital', desc:'Aprenda do zero ao avançado', valor:297, tipo:'Pagamento único', vendas:142, total:42174, emoji:'🎓' },
+  { id:'prod-002', nome:'Mentoria Mensal', desc:'Acompanhamento individual personalizado', valor:497, tipo:'Assinatura mensal', vendas:38, total:18886, emoji:'🚀' },
+  { id:'prod-003', nome:'Pack de Templates', desc:'100 templates premium para redes sociais', valor:97, tipo:'Pagamento único', vendas:89, total:8633, emoji:'🎨' },
+];
+
+/* ── RENDER: MINI TXNS ── */
+function renderMiniTxns() {
+  document.getElementById('mini-txns').innerHTML = MY_TXNS.slice(0, 3).map(t => `
+    <tr>
+      <td class="text-mono">${t.id}</td>
+      <td>${t.nome}</td>
+      <td class="text-mono fw-600">${fmt(t.valor)}</td>
+      <td><span class="badge badge-${t.status==='pago'?'green':t.status==='aguardando'?'yellow':t.status==='expirado'?'gray':'red'}">${t.status}</span></td>
+      <td class="text-muted">${fmtDate(t.data)}</td>
+    </tr>`).join('');
+}
+
+/* ── RENDER: TXN TABLE ── */
+let txnPage = 0;
+
+function renderTxns() {
+  const text   = document.getElementById('txn-filter-text')?.value.trim() || '';
+  const status = document.getElementById('txn-filter-status')?.value || '';
+  const from   = document.getElementById('txn-filter-from')?.value;
+  const to     = document.getElementById('txn-filter-to')?.value;
+  const filtered = MY_TXNS.filter(t => {
+    const matchText   = !text   || t.id.includes(text.toUpperCase()) || t.nome.toLowerCase().includes(text.toLowerCase());
+    const matchStatus = !status || t.status === status;
+    const tDate = new Date(t.data);
+    const matchFrom = !from || tDate >= new Date(from);
+    const matchTo   = !to   || tDate <= new Date(to + 'T23:59:59');
+    return matchText && matchStatus && matchFrom && matchTo;
+  });
+  const start = txnPage * 10;
+  document.getElementById('txn-body').innerHTML = filtered.slice(start, start + 10).map(t => `
+    <tr class="clickable" onclick="openTxnDrawer('${t.id}')">
+      <td class="text-mono">${escHtml(t.id)}</td>
+      <td>${escHtml(t.nome)}</td>
+      <td class="text-mono">${escHtml(t.cpf)}</td>
+      <td class="text-mono fw-600">${fmt(t.valor)}</td>
+      <td><span class="badge badge-${t.status==='pago'?'green':t.status==='aguardando'?'yellow':t.status==='expirado'?'gray':'red'}">${escHtml(t.status)}</span></td>
+      <td class="text-muted">${escHtml(t.descricao)}</td>
+      <td class="text-muted">${fmtDate(t.data)}</td>
+    </tr>`).join('');
+  renderPagination('txn-pag', filtered.length, 10, txnPage, p => { txnPage = p; renderTxns(); });
+}
+
+function filterTxns() { txnPage = 0; renderTxns(); }
+
+function exportMyTxns() {
+  const text   = document.getElementById('txn-filter-text')?.value.trim() || '';
+  const status = document.getElementById('txn-filter-status')?.value || '';
+  const from   = document.getElementById('txn-filter-from')?.value;
+  const to     = document.getElementById('txn-filter-to')?.value;
+  const data = MY_TXNS.filter(t => {
+    const matchText   = !text   || t.id.includes(text.toUpperCase()) || t.nome.toLowerCase().includes(text.toLowerCase());
+    const matchStatus = !status || t.status === status;
+    const tDate = new Date(t.data);
+    const matchFrom = !from || tDate >= new Date(from);
+    const matchTo   = !to   || tDate <= new Date(to + 'T23:59:59');
+    return matchText && matchStatus && matchFrom && matchTo;
+  });
+  const rows = [['ID','Cliente','CPF','Valor','Status','Descrição','Data'],
+    ...data.map(t => [t.id, t.nome, t.cpf, fmt(t.valor), t.status, t.descricao, fmtDate(t.data)])];
+  downloadCSV(rows, 'transacoes.csv');
+}
+
+/* ── ADQUIRENTES ── */
+const PROVIDER_ACTIVE = 'efipay'; // reflete o PAYMENT_PROVIDER do servidor
+
+function initAdquirentes() {
+  // Marca provedor ativo
+  ['efipay','mercadopago','stone'].forEach(p => {
+    const badge = document.getElementById('status-' + p);
+    if (!badge) return;
+    if (p === PROVIDER_ACTIVE) {
+      badge.textContent = 'Ativo';
+      badge.className = 'badge badge-green';
+    } else {
+      badge.textContent = 'Inativo';
+      badge.className = 'badge badge-gray';
+    }
+  });
+
+  // Tenta consultar o health do servidor para confirmar ambiente real
+  if (typeof Gateway !== 'undefined') {
+    Gateway.health().then(h => {
+      const prov = h.provider;
+      const env  = h.env; // 'sandbox' | 'production'
+      ['efipay','mercadopago','stone'].forEach(p => {
+        const envBadge = document.getElementById('env-' + p);
+        if (!envBadge) return;
+        if (p === prov) {
+          envBadge.textContent = env === 'production' ? 'Produção' : 'Sandbox';
+          envBadge.className   = env === 'production' ? 'badge badge-green' : 'badge badge-yellow';
+        }
+      });
+    }).catch(() => {}); // servidor offline — mantém valores padrão
+  }
+}
+
+function testProvider(provider) {
+  const names = { efipay:'EfiPay', mercadopago:'Mercado Pago', stone:'Stone' };
+  showToast(`Testando conexão com ${names[provider]}...`, 'info');
+
+  if (typeof Gateway === 'undefined') {
+    showToast('Gateway não disponível', 'error'); return;
+  }
+
+  Gateway.health()
+    .then(h => {
+      if (h.ok) {
+        showToast(`${names[provider]} respondeu — ${h.env}`, 'success');
+      } else {
+        showToast(`${names[provider]}: resposta inesperada`, 'warning');
+      }
+    })
+    .catch(() => showToast(`Falha ao conectar com ${names[provider]}`, 'error'));
+}
+
+function saveProviderConfig(provider) {
+  // Em produção, enviar para o backend via API autenticada.
+  // Por ora: validação básica + feedback.
+  const fields = {
+    efipay:       ['efi-client-id','efi-client-secret','efi-pix-key','efi-cert-path'],
+    mercadopago:  ['mp-access-token','mp-webhook-secret'],
+    stone:        ['stone-client-id','stone-account-id','stone-pix-key','stone-key-path'],
+  };
+
+  const required = fields[provider] || [];
+  const missing  = required.filter(id => !document.getElementById(id)?.value.trim());
+
+  if (missing.length) {
+    showToast('Preencha todos os campos obrigatórios', 'warning');
+    document.getElementById(missing[0])?.focus();
+    return;
+  }
+
+  closeModal('modal-' + provider);
+  showToast('Configuração salva — reinicie o servidor para aplicar', 'success');
+}
+
+function setActiveProvider(value) {
+  ['efipay','mercadopago','stone'].forEach(p => {
+    const badge = document.getElementById('status-' + p);
+    if (!badge) return;
+    if (p === value) {
+      badge.textContent = 'Ativo';
+      badge.className   = 'badge badge-green';
+    } else {
+      badge.textContent = 'Inativo';
+      badge.className   = 'badge badge-gray';
+    }
+  });
+  showToast(`Provedor alterado para ${value} — reinicie o servidor`, 'info');
+}
+
+/* ── TXN DRAWER ── */
+function openTxnDrawer(id) {
+  const t = MY_TXNS.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('drawer-txn-id').textContent = id;
+
+  const isPaid = t.status === 'pago';
+  const isWaiting = t.status === 'aguardando';
+
+  const pixCode = '00020126580014br.gov.bcb.pix0136' + randomId() + '5204000053039865802BR5913' +
+    t.nome.slice(0,13).replace(/ /g,'') + '6009SAO PAULO62070503' + randomId('***') +
+    '6304' + Math.floor(Math.random()*9999).toString().padStart(4,'0');
+
+  document.getElementById('drawer-txn-body').innerHTML = `
+    <div class="flex items-center justify-between mb-20">
+      <div>
+        <div style="font-family:var(--font-display);font-size:26px;font-weight:800">${fmt(t.valor)}</div>
+        <div class="text-muted text-sm mt-4">${escHtml(t.descricao)}</div>
+      </div>
+      <span class="badge badge-${t.status==='pago'?'green':t.status==='aguardando'?'yellow':t.status==='expirado'?'gray':'red'}" style="font-size:13px;padding:6px 12px">${escHtml(t.status)}</span>
+    </div>
+
+    <div style="font-weight:700;font-size:13px;margin-bottom:14px">Timeline</div>
+    <div class="txn-timeline">
+      <div class="timeline-step done">
+        <span class="timeline-step-label">Pix gerado</span>
+        <span class="timeline-step-time">${fmtDate(t.data)}</span>
+      </div>
+      <div class="timeline-step ${isPaid || isWaiting ? 'current' : ''}">
+        <span class="timeline-step-label">Aguardando pagamento</span>
+        <span class="timeline-step-time">${isWaiting ? 'Em andamento...' : isPaid ? fmtDate(new Date(new Date(t.data).getTime() + 120000).toISOString()) : '—'}</span>
+      </div>
+      <div class="timeline-step ${isPaid ? 'done' : ''}">
+        <span class="timeline-step-label">Pagamento confirmado</span>
+        <span class="timeline-step-time">${isPaid ? fmtDate(new Date(new Date(t.data).getTime() + 180000).toISOString()) : '—'}</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div style="font-weight:700;font-size:13px;margin-bottom:14px">Dados do pagador</div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+      <div class="flex justify-between"><span class="text-muted">Nome</span><span>${escHtml(t.nome)}</span></div>
+      <div class="flex justify-between"><span class="text-muted">CPF</span><span class="text-mono">${escHtml(t.cpf)}</span></div>
+      <div class="flex justify-between"><span class="text-muted">E-mail</span><span>${escHtml(t.email)}</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <div style="font-weight:700;font-size:13px;margin-bottom:14px">QR Code Pix</div>
+    <div style="display:flex;gap:16px;align-items:flex-start">
+      ${QR_SVG}
+      <div style="flex:1">
+        <div class="text-xs text-muted mb-6">Código copia-e-cola</div>
+        <div class="product-link-row">
+          <span class="product-link-text">${pixCode}</span>
+          <span class="product-link-copy" onclick="copyToClipboard('${pixCode}','Código Pix copiado!')">Copiar</span>
+        </div>
+      </div>
+    </div>`;
+
+  openDrawer('drawer-txn');
+}
+
+/* ── RENDER: PRODUCTS ── */
+function renderProducts() {
+  document.getElementById('products-grid').innerHTML = PRODUCTS.map(p => `
+    <div class="product-card">
+      <div class="product-img">${p.emoji}</div>
+      <div class="product-body">
+        <div class="product-name">${p.nome}</div>
+        <div class="product-price">${fmt(p.valor)}<span style="font-size:13px;color:var(--text3);font-family:var(--font-body);font-weight:400"> / ${p.tipo}</span></div>
+        <div class="product-link-row">
+          <span class="product-link-text">pay.payzap.com/p/${p.id}</span>
+          <span class="product-link-copy" onclick="copyToClipboard('pay.payzap.com/p/${p.id}','Link copiado!')">Copiar</span>
+        </div>
+        <div class="product-stats">
+          <div><strong>${p.vendas}</strong> vendas</div>
+          <div><strong>${fmtCompact(p.total)}</strong> em receita</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="showToast('Em desenvolvimento','info')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Remover</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function createProduct() {
+  const nome  = document.getElementById('p-nome').value.trim();
+  const valor = parseFloat(document.getElementById('p-valor').value.replace(',','.'));
+  const tipo  = document.getElementById('p-tipo').value;
+  const desc  = document.getElementById('p-desc').value.trim();
+  const foto  = document.getElementById('p-foto').value.trim();
+  const emoji = ['🎓','🚀','🎨','💡','🔥','⭐'][Math.floor(Math.random()*6)];
+  if (!nome || !valor) { showToast('Preencha nome e valor','error'); return; }
+  PRODUCTS.unshift({ id:'prod-' + randomId(''), nome, desc, valor, tipo, foto, vendas:0, total:0, emoji });
+  renderProducts();
+  closeModal('modal-produto');
+  showToast(`Produto "${nome}" criado!`, 'success');
+}
+
+function deleteProduct(id) {
+  PRODUCTS = PRODUCTS.filter(p => p.id !== id);
+  renderProducts();
+  showToast('Produto removido', 'info');
+}
+
+function requestWithdraw() {
+  const valor = document.getElementById('saque-valor').value.trim();
+  const pix   = document.getElementById('saque-pix').value.trim();
+  if (!valor || isNaN(parseFloat(valor.replace(',','.')))) {
+    showToast('Informe um valor válido para o saque', 'error'); return;
+  }
+  if (!pix) {
+    showToast('Informe a chave Pix de destino', 'error'); return;
+  }
+  closeModal('modal-saque');
+  showToast(`Saque de R$ ${valor} solicitado com sucesso!`, 'success');
+}
+
+/* ── PAGINATION ── */
+function renderPagination(containerId, total, perP, current, onPage) {
+  const totalPages = Math.ceil(total / perP);
+  const container = document.getElementById(containerId);
+  if (total === 0) { container.innerHTML = '<span style="flex:1;font-size:12px;color:var(--text3)">Nenhum resultado encontrado</span>'; return; }
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+  let btns = `<span style="flex:1;font-size:12px;color:var(--text3)">Mostrando ${current*perP+1}–${Math.min((current+1)*perP,total)} de ${total}</span>`;
+  btns += `<button class="page-btn" ${current===0?'disabled':''} onclick="(${onPage.toString()})(${current-1})">‹</button>`;
+  for (let i = 0; i < totalPages; i++) {
+    btns += `<button class="page-btn ${i===current?'active':''}" onclick="(${onPage.toString()})(${i})">${i+1}</button>`;
+  }
+  btns += `<button class="page-btn" ${current===totalPages-1?'disabled':''} onclick="(${onPage.toString()})(${current+1})">›</button>`;
+  container.innerHTML = btns;
+}
+
+/* ── CHARTS ── */
+function initCharts() {
+  // Destroy any existing instances on these canvases
+  ['revenue-chart','status-chart'].forEach(id => {
+    const inst = Object.values(Chart.instances).find(c => c.canvas.id === id);
+    if (inst) inst.destroy();
+  });
+
+  const days = ['19/03','20/03','21/03','22/03','23/03','24/03','25/03'];
+  const revenue = [4800, 5200, 3900, 7100, 6400, 8200, 7600];
+
+  const revCtx = document.getElementById('revenue-chart').getContext('2d');
+  const grad = revCtx.createLinearGradient(0, 0, 0, 200);
+  grad.addColorStop(0, 'rgba(230,57,70,0.18)');
+  grad.addColorStop(1, 'rgba(230,57,70,0)');
+
+  createLineChart(document.getElementById('revenue-chart'), days, [{
+    label:'Receita', data:revenue, borderColor:'#e63946', backgroundColor:grad, fill:true
+  }], { currency:true });
+
+  createDoughnutChart(document.getElementById('status-chart'),
+    ['Aprovado','Expirado','Cancelado','Aguardando'],
+    [77,13,6,4],
+    ['#30d158','#555d72','#ff453a','#ffd60a']
+  );
+}
+
+/* ── INIT ── */
+renderMiniTxns();
+renderTxns();
+renderProducts();
+initCharts();
+initAdquirentes();
+</script>
+</body>
+</html>
