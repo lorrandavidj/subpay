@@ -9,6 +9,147 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="assets/style.css"/>
   <link rel="stylesheet" href="pages/superadmin/style.css"/>
+  <style>
+    /* ── ADQUIRENTES PREMIUM UI ── */
+    .provider-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .provider-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .provider-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--blue);
+      box-shadow: 0 12px 24px -10px rgba(0,0,0,0.3);
+    }
+    .provider-card::before {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle at top right, var(--accent-glow), transparent 70%);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .provider-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .provider-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .provider-name {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .provider-tech {
+      font-size: 11px;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+    .provider-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 12px;
+      background: var(--bg1);
+      border-radius: 12px;
+    }
+    .p-stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .p-stat-label {
+      font-size: 10px;
+      color: var(--text3);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .p-stat-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text2);
+    }
+    .provider-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .btn-provider {
+      flex: 1;
+      height: 36px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      color: var(--text2);
+    }
+    .btn-provider:hover {
+      background: var(--bg2);
+      border-color: var(--text3);
+    }
+    .btn-provider.primary {
+      background: var(--blue);
+      color: #0a0b0e;
+      border: none;
+    }
+    .btn-provider.primary:hover {
+      background: #8ec0ff;
+    }
+    .status-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      position: relative;
+    }
+    .status-pulse::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-ring 1.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+      opacity: 0.4;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.7); opacity: 0.8; }
+      80%, 100% { transform: scale(2.2); opacity: 0; }
+    }
+  </style>
 </head>
 <body>
 
@@ -96,15 +237,13 @@
         <div class="relative">
           <button class="icon-btn" onclick="toggleDropdown('notif-dd')" title="Notificações">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <span class="notif-badge">4</span>
           </button>
-          <div class="dropdown" id="notif-dd" style="width:300px">
-            <div style="padding:8px 10px 4px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase">Notificações</div>
+          <div class="dropdown" id="notif-dd" style="width:320px">
+            <div style="padding:12px 16px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase">Notificações</div>
             <div class="dropdown-sep"></div>
-            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">MED crítico — Loja do João</div><div style="font-size:11px;color:var(--text3)">Há 12 min</div></div></div>
-            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">Saque pendente de aprovação</div><div style="font-size:11px;color:var(--text3)">Há 45 min</div></div></div>
-            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">Novo vendedor cadastrado</div><div style="font-size:11px;color:var(--text3)">Há 1h</div></div></div>
-            <div class="dropdown-item"><div><div style="color:var(--text);font-size:12px;font-weight:600">Volume diário bateu R$ 1M</div><div style="font-size:11px;color:var(--text3)">Hoje às 09:43</div></div></div>
+            <div style="padding:40px 20px;text-align:center;color:var(--text3);font-size:13px">
+              Nenhuma notificação no momento
+            </div>
           </div>
         </div>
         <div class="relative">
@@ -136,25 +275,21 @@
 
         <div class="kpi-grid">
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:var(--blue-dim)"></div>
             <div class="kpi-label">Volume do Mês</div>
             <div class="kpi-value">R$ 0,00</div>
             <div class="kpi-delta">Aguardando transações</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:var(--green-dim)"></div>
             <div class="kpi-label">Vendedores Ativos</div>
             <div class="kpi-value">0</div>
             <div class="kpi-delta">Nenhum cadastrado</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:var(--yellow-dim)"></div>
             <div class="kpi-label">Taxa de Aprovação</div>
             <div class="kpi-value">0%</div>
             <div class="kpi-delta">Sem dados</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:var(--red-dim)"></div>
             <div class="kpi-label">Receita MDR</div>
             <div class="kpi-value">R$ 0,00</div>
             <div class="kpi-delta">Sem receita</div>
@@ -317,15 +452,8 @@
         </div>
 
         <!-- Cards dos provedores -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:28px">
-
+        <div class="provider-grid">
           <!-- EfiPay -->
-          <div class="card" style="border-color:rgba(99,179,237,0.25)">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-              <div style="width:40px;height:40px;border-radius:10px;background:rgba(99,179,237,0.12);display:flex;align-items:center;justify-content:center;font-size:18px"></div>
-              <div style="flex:1">
-                <div style="font-weight:700;font-size:14px">EfiPay</div>
-                <div class="text-sm text-muted">OAuth2 + mTLS (P12)</div>
               </div>
               <span class="badge badge-green" id="sa-status-efipay">Ativo</span>
             </div>
@@ -1032,10 +1160,17 @@ async function saveProviderConfig(provider) {
 function updateActiveProviderBadges(value) {
   const names = { efipay:'EfiPay', mercadopago:'Mercado Pago', stone:'Stone' };
   ['efipay','mercadopago','stone'].forEach(p => {
-    const b = document.getElementById('sa-status-' + p);
-    if (!b) return;
-    b.textContent = p === value ? 'Ativo'   : 'Inativo';
-    b.className   = p === value ? 'badge badge-green' : 'badge badge-gray';
+    const text = document.getElementById('sa-status-' + p);
+    const pulse = document.getElementById('sa-status-pulse-' + p);
+    if (!text) return;
+    
+    const isActive = p === value;
+    text.textContent = isActive ? 'Ativo' : 'Inativo';
+    text.style.color = isActive ? 'var(--green)' : 'var(--text3)';
+    
+    if (pulse) {
+      pulse.className = isActive ? 'status-pulse' : '';
+    }
   });
   
   const radio = document.querySelector(`input[name="sa-active-provider"][value="${value}"]`);
