@@ -124,19 +124,16 @@
             <div class="kpi-delta">Aguardando vendas</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:var(--blue-dim)">🔄</div>
             <div class="kpi-label">Transações</div>
             <div class="kpi-value">0</div>
             <div class="kpi-delta">Nenhuma transação</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:var(--yellow-dim)">✅</div>
             <div class="kpi-label">Taxa de Aprovação</div>
             <div class="kpi-value">0%</div>
             <div class="kpi-delta">Sem dados</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:var(--red-dim)">💳</div>
             <div class="kpi-label">Ticket Médio</div>
             <div class="kpi-value">R$ 0,00</div>
             <div class="kpi-delta">Sem dados</div>
@@ -265,128 +262,6 @@
   </div>
 </div>
 
-<!-- ════ MODAL: EFIPAY CONFIG ════ -->
-<div class="modal-overlay" id="modal-efipay">
-  <div class="modal" style="max-width:460px">
-    <div class="modal-header">
-      <span class="modal-title">EfiPay — Configuração</span>
-      <button class="modal-close" onclick="closeModal('modal-efipay')">×</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:13px">
-      <div class="input-group">
-        <label class="input-label">Client ID</label>
-        <input id="efi-client-id" class="input" type="text" placeholder="Client_ID_..."/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Client Secret</label>
-        <input id="efi-client-secret" class="input" type="password" placeholder="Client_Secret_..."/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Chave Pix (recebimento)</label>
-        <input id="efi-pix-key" class="input" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Caminho do Certificado P12</label>
-        <input id="efi-cert-path" class="input" type="text" placeholder="./certs/efipay-homolog.p12"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Senha do Certificado</label>
-        <input id="efi-cert-pass" class="input" type="password" placeholder="Deixe vazio se não houver"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Ambiente</label>
-        <select id="efi-env" class="input">
-          <option value="sandbox">Sandbox (homologação)</option>
-          <option value="production">Produção</option>
-        </select>
-      </div>
-      <div style="background:var(--blue-dim);border:1px solid rgba(99,179,237,0.2);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
-        Gere as credenciais em <strong>app.sejaefi.com.br → API → Aplicações</strong>. O certificado P12 é obtido em <strong>API → Certificados</strong>.
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-efipay')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveProviderConfig('efipay')">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ════ MODAL: MERCADO PAGO CONFIG ════ -->
-<div class="modal-overlay" id="modal-mercadopago">
-  <div class="modal" style="max-width:460px">
-    <div class="modal-header">
-      <span class="modal-title">Mercado Pago — Configuração</span>
-      <button class="modal-close" onclick="closeModal('modal-mercadopago')">×</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:13px">
-      <div class="input-group">
-        <label class="input-label">Access Token</label>
-        <input id="mp-access-token" class="input" type="password" placeholder="APP_USR-... ou TEST-..."/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Webhook Secret</label>
-        <input id="mp-webhook-secret" class="input" type="password" placeholder="Chave secreta configurada no painel MP"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Ambiente</label>
-        <select id="mp-env" class="input">
-          <option value="sandbox">Sandbox (token TEST-...)</option>
-          <option value="production">Produção (token APP_USR-...)</option>
-        </select>
-      </div>
-      <div style="background:var(--green-dim);border:1px solid rgba(34,197,94,0.15);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
-        Gere o Access Token em <strong>mercadopago.com.br/developers → Credenciais</strong>. O Webhook Secret é criado em <strong>Webhooks → Configurar</strong>.
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-mercadopago')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveProviderConfig('mercadopago')">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ════ MODAL: STONE CONFIG ════ -->
-<div class="modal-overlay" id="modal-stone">
-  <div class="modal" style="max-width:460px">
-    <div class="modal-header">
-      <span class="modal-title">Stone — Configuração</span>
-      <button class="modal-close" onclick="closeModal('modal-stone')">×</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:13px">
-      <div class="input-group">
-        <label class="input-label">Client ID</label>
-        <input id="stone-client-id" class="input" type="text" placeholder="UUID da aplicação Stone"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Account ID</label>
-        <input id="stone-account-id" class="input" type="text" placeholder="ID da conta Stone"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Chave Pix (recebimento)</label>
-        <input id="stone-pix-key" class="input" type="text" placeholder="Chave Pix cadastrada na Stone"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Caminho da Chave Privada RSA (PEM)</label>
-        <input id="stone-key-path" class="input" type="text" placeholder="./certs/stone-private.pem"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Ambiente</label>
-        <select id="stone-env" class="input">
-          <option value="sandbox">Sandbox</option>
-          <option value="production">Produção</option>
-        </select>
-      </div>
-      <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5">
-        <strong>Pix Stone está em Alpha</strong> — solicite acesso em <strong>parcerias@openbank.stone.com.br</strong>. Gere a chave RSA 4096 com: <code style="font-family:var(--font-mono,monospace);background:var(--bg3);padding:1px 4px;border-radius:3px">openssl genrsa -out stone-private.pem 4096</code>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-stone')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveProviderConfig('stone')">Salvar</button>
-    </div>
-  </div>
-</div>
-
 <!-- ════ MODAL: PRODUTO ════ -->
 <div class="modal-overlay" id="modal-produto">
   <div class="modal">
@@ -439,7 +314,7 @@
     <div style="display:flex;flex-direction:column;gap:14px">
       <div style="background:var(--green-dim);border:1px solid rgba(34,197,94,0.2);border-radius:var(--radius-sm);padding:14px;display:flex;align-items:center;justify-content:space-between">
         <span class="text-sm text-muted">Disponível para saque</span>
-        <span style="font-weight:800;color:var(--green);font-family:var(--font-display)">R$ 14.380,00</span>
+        <span style="font-weight:800;color:var(--green);font-family:var(--font-display)">R$ 0,00</span>
       </div>
       <div class="input-group">
         <label class="input-label">Valor do saque</label>
@@ -472,7 +347,7 @@ function nav(page, el) {
   const activeEl = el || document.querySelector(`.nav-item[onclick*="'${page}'"]`);
   if (activeEl) activeEl.classList.add('active');
   const labels = { painel:'Painel', transacoes:'Transações', produtos:'Produtos & Links',
-                   saldo:'Saldo & Saques', adquirentes:'Adquirentes' };
+                   saldo:'Saldo & Saques' };
   document.getElementById('breadcrumb-text').textContent = labels[page] || page;
   closeAllDropdowns();
 }
@@ -547,7 +422,7 @@ async function loadData() {
     document.querySelector('.kpi-card:nth-child(3) .kpi-value').textContent = approvalRate + '%';
     document.querySelector('.kpi-card:nth-child(4) .kpi-value').textContent = fmt(avgTicket);
 
-    document.querySelector('#page-saldo .kpi-value, #page-saldo div[style*="36px"]').textContent = fmt(totalRevenue);
+    document.querySelector('#page-saldo div[style*="36px"]').textContent = fmt(totalRevenue);
 
     renderMiniTxns();
     renderTxns();
@@ -622,96 +497,6 @@ function exportMyTxns() {
   const rows = [['ID','Cliente','CPF','Valor','Status','Descrição','Data'],
     ...data.map(t => [t.id, t.nome, t.cpf, fmt(t.valor), t.status, t.descricao, fmtDate(t.data)])];
   downloadCSV(rows, 'transacoes.csv');
-}
-
-/* ── ADQUIRENTES ── */
-const PROVIDER_ACTIVE = 'efipay'; // reflete o PAYMENT_PROVIDER do servidor
-
-function initAdquirentes() {
-  // Marca provedor ativo
-  ['efipay','mercadopago','stone'].forEach(p => {
-    const badge = document.getElementById('status-' + p);
-    if (!badge) return;
-    if (p === PROVIDER_ACTIVE) {
-      badge.textContent = 'Ativo';
-      badge.className = 'badge badge-green';
-    } else {
-      badge.textContent = 'Inativo';
-      badge.className = 'badge badge-gray';
-    }
-  });
-
-  // Tenta consultar o health do servidor para confirmar ambiente real
-  if (typeof Gateway !== 'undefined') {
-    Gateway.health().then(h => {
-      const prov = h.provider;
-      const env  = h.env; // 'sandbox' | 'production'
-      ['efipay','mercadopago','stone'].forEach(p => {
-        const envBadge = document.getElementById('env-' + p);
-        if (!envBadge) return;
-        if (p === prov) {
-          envBadge.textContent = env === 'production' ? 'Produção' : 'Sandbox';
-          envBadge.className   = env === 'production' ? 'badge badge-green' : 'badge badge-yellow';
-        }
-      });
-    }).catch(() => {}); // servidor offline — mantém valores padrão
-  }
-}
-
-function testProvider(provider) {
-  const names = { efipay:'EfiPay', mercadopago:'Mercado Pago', stone:'Stone' };
-  showToast(`Testando conexão com ${names[provider]}...`, 'info');
-
-  if (typeof Gateway === 'undefined') {
-    showToast('Gateway não disponível', 'error'); return;
-  }
-
-  Gateway.health()
-    .then(h => {
-      if (h.ok) {
-        showToast(`${names[provider]} respondeu — ${h.env}`, 'success');
-      } else {
-        showToast(`${names[provider]}: resposta inesperada`, 'warning');
-      }
-    })
-    .catch(() => showToast(`Falha ao conectar com ${names[provider]}`, 'error'));
-}
-
-function saveProviderConfig(provider) {
-  // Em produção, enviar para o backend via API autenticada.
-  // Por ora: validação básica + feedback.
-  const fields = {
-    efipay:       ['efi-client-id','efi-client-secret','efi-pix-key','efi-cert-path'],
-    mercadopago:  ['mp-access-token','mp-webhook-secret'],
-    stone:        ['stone-client-id','stone-account-id','stone-pix-key','stone-key-path'],
-  };
-
-  const required = fields[provider] || [];
-  const missing  = required.filter(id => !document.getElementById(id)?.value.trim());
-
-  if (missing.length) {
-    showToast('Preencha todos os campos obrigatórios', 'warning');
-    document.getElementById(missing[0])?.focus();
-    return;
-  }
-
-  closeModal('modal-' + provider);
-  showToast('Configuração salva — reinicie o servidor para aplicar', 'success');
-}
-
-function setActiveProvider(value) {
-  ['efipay','mercadopago','stone'].forEach(p => {
-    const badge = document.getElementById('status-' + p);
-    if (!badge) return;
-    if (p === value) {
-      badge.textContent = 'Ativo';
-      badge.className   = 'badge badge-green';
-    } else {
-      badge.textContent = 'Inativo';
-      badge.className   = 'badge badge-gray';
-    }
-  });
-  showToast(`Provedor alterado para ${value} — reinicie o servidor`, 'info');
 }
 
 /* ── TXN DRAWER ── */
