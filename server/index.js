@@ -10,6 +10,7 @@ import configRouter   from './routes/config.js';
 import { requireApiKey, generateApiToken } from './middleware/auth.js';
 import { getCharge } from './providers/index.js';
 import { cfg, PROVIDER } from './config.js';
+import { db } from './db.js';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -78,6 +79,25 @@ app.post('/auth/token', (req, res) => {
 app.use('/api/charges', chargesRouter);
 app.use('/api/balance', requireApiKey, balanceRouter);
 app.use('/api/config',  configRouter);
+
+// Database endpoints
+app.get('/api/transactions', async (req, res) => {
+  res.json(await db.getTransactions());
+});
+
+app.get('/api/products', async (req, res) => {
+  res.json(await db.getProducts());
+});
+
+app.post('/api/products', async (req, res) => {
+  await db.saveProduct(req.body);
+  res.json({ ok: true });
+});
+
+app.delete('/api/products/:id', async (req, res) => {
+  await db.deleteProduct(req.params.id);
+  res.json({ ok: true });
+});
 
 // ── Inicialização ─────────────────────────────────────────────────────────────
 

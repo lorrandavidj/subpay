@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { createCharge, getCharge, refund, activeProvider } from '../providers/index.js';
+import { db } from '../db.js';
 
 const router = Router();
 
@@ -36,6 +37,19 @@ router.post('/', async (req, res) => {
       description,
       externalId: externalId || uuidv4(),
       expiresIn: expiresIn || 3600,
+    });
+
+    // Salva no DB local para o dashboard
+    await db.saveTransaction({
+      id: charge.chargeId,
+      vendedor: email, // Usando email como chave de vendedor simplificada
+      nome: name,
+      cpf,
+      email,
+      valor: parseFloat(amount),
+      status: 'aguardando',
+      descricao: description || 'Pix PayZap',
+      data: new Date().toISOString(),
     });
 
     res.status(201).json({

@@ -138,26 +138,26 @@
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--blue-dim)"></div>
             <div class="kpi-label">Volume do Mês</div>
-            <div class="kpi-value">R$ 14,2M</div>
-            <div class="kpi-delta delta-up">▲ +23% vs mês anterior</div>
+            <div class="kpi-value">R$ 0,00</div>
+            <div class="kpi-delta">Aguardando transações</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--green-dim)"></div>
             <div class="kpi-label">Vendedores Ativos</div>
-            <div class="kpi-value">3.841</div>
-            <div class="kpi-delta delta-up">▲ +412 novos este mês</div>
+            <div class="kpi-value">0</div>
+            <div class="kpi-delta">Nenhum cadastrado</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--yellow-dim)"></div>
             <div class="kpi-label">Taxa de Aprovação</div>
-            <div class="kpi-value">94,7%</div>
-            <div class="kpi-delta delta-down">▼ -0.3% vs mês anterior</div>
+            <div class="kpi-value">0%</div>
+            <div class="kpi-delta">Sem dados</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--red-dim)"></div>
             <div class="kpi-label">Receita MDR</div>
-            <div class="kpi-value">R$ 284k</div>
-            <div class="kpi-delta delta-up">▲ +18% vs mês anterior</div>
+            <div class="kpi-value">R$ 0,00</div>
+            <div class="kpi-delta">Sem receita</div>
           </div>
         </div>
 
@@ -283,8 +283,8 @@
           <div class="flex items-center justify-between">
             <div>
               <div class="text-sm text-muted mb-4">Float atual (em trânsito)</div>
-              <div style="font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--blue)">R$ 2.847.392,00</div>
-              <div class="text-sm text-muted mt-8">Liquidação média: D+1 · Próximo ciclo: amanhã 12:00</div>
+              <div style="font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--blue)">R$ 0,00</div>
+              <div class="text-sm text-muted mt-8">Liquidação média: --- · Próximo ciclo: ---</div>
             </div>
             <div style="text-align:right">
               <div class="badge badge-blue" style="font-size:12px;padding:6px 14px">SALDO DISPONÍVEL</div>
@@ -762,38 +762,49 @@ function switchTab(btn) {
   }
 }
 
+/* ── DATA LOADING ── */
+async function loadData() {
+  try {
+    const res = await fetch('/api/transactions');
+    const txns = await res.json();
+    
+    // Atualiza arrays globais
+    GLOBAL_TXNS.length = 0;
+    GLOBAL_TXNS.push(...txns);
+    
+    // Recalcula KPIs base
+    const totalVol = txns.filter(t => t.status === 'pago').reduce((acc, t) => acc + t.valor, 0);
+    const approvedCount = txns.filter(t => t.status === 'pago').length;
+    const approvalRate = txns.length > 0 ? (approvedCount / txns.length * 100).toFixed(1) : 0;
+    const revenue = totalVol * 0.02; // Ex: 2% MDR de exemplo
+
+    // Atualiza UI
+    document.querySelector('.kpi-card:nth-child(1) .kpi-value').textContent = fmt(totalVol);
+    document.querySelector('.kpi-card:nth-child(3) .kpi-value').textContent = approvalRate + '%';
+    document.querySelector('.kpi-card:nth-child(4) .kpi-value').textContent = fmt(revenue);
+    
+    document.querySelector('.float-card div[style*="32px"]').textContent = fmt(totalVol);
+
+    renderTopVendors();
+    renderVendors();
+    renderGlobalTxns();
+    renderMEDs();
+    renderSaques();
+    renderLists();
+    initCharts();
+  } catch (err) {
+    console.error('Falha ao carregar dados:', err);
+  }
+}
+
 /* ── MOCK DATA ── */
-const VENDORS = [
-  { nome:'Loja do João',    cnpj:'12.345.678/0001-90', vol:248400, chargebk:'0.8%', status:'Ativo',      desde:'2023-05-12' },
-  { nome:'Tech Soluções',   cnpj:'98.765.432/0001-21', vol:189200, chargebk:'1.2%', status:'Ativo',      desde:'2023-08-01' },
-  { nome:'Digital Store',   cnpj:'11.222.333/0001-44', vol:145800, chargebk:'2.1%', status:'Em análise', desde:'2024-01-15' },
-  { nome:'Cursos Online BR', cnpj:'44.555.666/0001-77', vol:380000, chargebk:'0.4%', status:'Ativo',     desde:'2022-11-20' },
-  { nome:'SaaS Plus',       cnpj:'77.888.999/0001-11', vol:92000,  chargebk:'0.6%', status:'Ativo',      desde:'2024-03-01' },
-  { nome:'Marketologia',    cnpj:'33.444.555/0001-66', vol:54000,  chargebk:'3.8%', status:'Suspenso',   desde:'2023-02-28' },
-  { nome:'EduTech Brasil',  cnpj:'22.333.444/0001-55', vol:217600, chargebk:'0.9%', status:'Ativo',      desde:'2023-06-10' },
-  { nome:'Infopro',         cnpj:'55.666.777/0001-88', vol:168000, chargebk:'1.5%', status:'Ativo',      desde:'2023-09-05' },
-];
-
-const GLOBAL_TXNS = generateTxns(40);
-const VENDOR_NAMES = VENDORS.map(v => v.nome);
-GLOBAL_TXNS.forEach((t, i) => { t.vendedor = VENDOR_NAMES[i % VENDOR_NAMES.length]; });
-
-const MEDS_DATA = [
-  { id:'MED-001', vendedor:'Loja do João',     valor:1290.00, motivo:'Produto não entregue', prioridade:'critico',  data:'2025-03-25' },
-  { id:'MED-002', vendedor:'SaaS Plus',         valor:349.90,  motivo:'Cobrança duplicada',  prioridade:'normal',   data:'2025-03-24' },
-  { id:'MED-003', vendedor:'Digital Store',     valor:799.00,  motivo:'Não reconhece compra', prioridade:'critico', data:'2025-03-24' },
-  { id:'MED-004', vendedor:'Tech Soluções',     valor:2100.00, motivo:'Fraude alegada',       prioridade:'critico', data:'2025-03-23' },
-  { id:'MED-005', vendedor:'Cursos Online BR',  valor:197.00,  motivo:'Cancelamento negado', prioridade:'normal',   data:'2025-03-22' },
-  { id:'MED-006', vendedor:'Marketologia',      valor:540.00,  motivo:'Produto com defeito',  prioridade:'resolvido',data:'2025-03-20' },
-  { id:'MED-007', vendedor:'EduTech Brasil',    valor:890.00,  motivo:'Serviço não prestado', prioridade:'critico', data:'2025-03-20' },
-];
-
-const SAQUES_DATA = [
-  { vendedor:'Loja do João',    valor:12400.00, data:'2025-03-25 14:22' },
-  { vendedor:'Cursos Online BR', valor:45000.00, data:'2025-03-25 11:05' },
-  { vendedor:'EduTech Brasil',  valor:8700.00,  data:'2025-03-24 16:44' },
-  { vendedor:'Tech Soluções',   valor:22000.00, data:'2025-03-24 09:30' },
-];
+const VENDORS = [];
+const GLOBAL_TXNS = [];
+const VENDOR_NAMES = [];
+const MEDS_DATA = [];
+const SAQUES_DATA = [];
+const blacklist = [];
+const whitelist  = [];
 
 /* ── RENDER: TOP VENDORS ── */
 function renderTopVendors() {
@@ -1096,9 +1107,6 @@ function renderSaques() {
 }
 
 /* ── RENDER: LISTS ── */
-const blacklist = ['123.456.789-00', '98.765.432/0001-21'];
-const whitelist  = ['111.222.333-44', 'Cursos Online BR — 44.555.666/0001-77'];
-
 function renderLists() {
   ['blacklist','whitelist'].forEach(type => {
     const arr = type === 'blacklist' ? blacklist : whitelist;
@@ -1230,8 +1238,12 @@ function initCharts() {
     if (inst) inst.destroy();
   });
 
-  const days = ['19/03','20/03','21/03','22/03','23/03','24/03','25/03'];
-  const volData = [842300, 920100, 778400, 1124000, 985000, 1340200, 1198000];
+  const days = Array.from({length:7}, (_,i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6-i));
+    return d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+  });
+  const volData = [0, 0, 0, 0, 0, 0, 0];
 
   const volCtx = document.getElementById('vol-chart').getContext('2d');
   const grad = volCtx.createLinearGradient(0, 0, 0, 220);
@@ -1248,12 +1260,12 @@ function initCharts() {
 
   createDoughnutChart(document.getElementById('status-chart'),
     ['Aprovado', 'Expirado', 'Cancelado', 'Aguardando'],
-    [74, 14, 8, 4],
+    [0, 0, 0, 0],
     ['#30d158', '#555d72', '#ff453a', '#ffd60a']
   );
 
-  const mdrDays = Array.from({length:30}, (_,i) => `${i+1}/03`);
-  const mdrData = mdrDays.map(() => Math.round(7000 + Math.random() * 5000));
+  const mdrDays = Array.from({length:30}, (_,i) => `${i+1}/${new Date().getMonth()+1}`);
+  const mdrData = mdrDays.map(() => 0);
 
   createBarChart(document.getElementById('mdr-chart'), mdrDays, [{
     label: 'Receita MDR',
@@ -1274,6 +1286,8 @@ renderLists();
 initCharts();
 initAdquirentes();
 loadConfig();
+loadData();
 </script>
 </body>
 </html>
+```

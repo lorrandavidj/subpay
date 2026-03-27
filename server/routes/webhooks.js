@@ -1,6 +1,7 @@
 // PayZap — Rotas de webhooks (callbacks dos provedores)
 import { Router } from 'express';
-import { getCharge, activeProvider } from '../providers/index.js';
+import { getCharge, activeProvider, validateWebhook } from '../providers/index.js';
+import { db } from '../db.js';
 import * as efipay from '../providers/efipay.js';
 import * as mp from '../providers/mercadopago.js';
 import * as stone from '../providers/stone.js';
@@ -14,11 +15,11 @@ export const chargeStatusCache = new Map();
 // ── POST /webhook/efipay ──────────────────────────────────────────────────────
 // EfiPay envia via mTLS — a validação é feita pelo servidor web (nginx/caddy).
 // Este endpoint processa o payload.
-router.post('/efipay', (req, res) => {
+router.post('/efipay', async (req, res) => {
   try {
     const pixList = efipay.validateWebhook(req.body);
 
-    pixList.forEach(pix => {
+    for (const pix of pixList) {
       console.log('[webhook/efipay] Pix recebido:', {
         txid:   pix.txid,
         valor:  pix.valor,
@@ -34,11 +35,19 @@ router.post('/efipay', (req, res) => {
           amount: parseFloat(pix.valor),
           pagador: pix.gnExtras?.pagador,
         });
-      }
-      // TODO: persistir no banco, disparar fulfillment, notificar vendedor etc.
-    });
 
-    res.sendStatus(200);
+        // Persistir no banco
+        console.log('[webhook] EfiPay confirmed:', pix.txid);
+        await db.saveTransaction({
+          id: pix.txid,
+          status: 'pago',
+          pagamento_em: pix.horario,
+        });
+      }
+      // TODO: disparar fulfillment, notificar vendedor etc.
+    }
+
+    res.status(200).send('OK');
   } catch (err) {
     console.error('[webhook/efipay] erro:', err.message);
     res.status(400).json({ error: err.message });
@@ -95,10 +104,20 @@ router.post('/stone', async (req, res) => {
           status: event.event_type === 'transaction_approved' ? 'paid' : 'pending',
           paidAt: event.resource?.updated_at,
         });
+
+        // Persistir no banco
+        if (event.event_type === 'transaction_approved') {
+          console.log('[webhook] Stone confirmed:', txId);
+          await db.saveTransaction({
+            id: txId,
+            status: 'pago',
+            pagamento_em: event.resource?.updated_at || new Date().toISOString(),
+          });
+        }
       }
     }
 
-    res.sendStatus(200);
+    res.status(200).send('OK');
   } catch (err) {
     console.error('[webhook/stone] erro:', err.message);
     res.sendStatus(200);

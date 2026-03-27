@@ -121,26 +121,26 @@
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--green-dim)">💰</div>
             <div class="kpi-label">Receita do Mês</div>
-            <div class="kpi-value">R$ 48.240</div>
-            <div class="kpi-delta delta-up">▲ +12% vs mês anterior</div>
+            <div class="kpi-value">R$ 0,00</div>
+            <div class="kpi-delta">Aguardando vendas</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--blue-dim)">🔄</div>
             <div class="kpi-label">Transações</div>
-            <div class="kpi-value">1.284</div>
-            <div class="kpi-delta delta-up">▲ +8% vs mês anterior</div>
+            <div class="kpi-value">0</div>
+            <div class="kpi-delta">Nenhuma transação</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--yellow-dim)">✅</div>
             <div class="kpi-label">Taxa de Aprovação</div>
-            <div class="kpi-value">96,3%</div>
-            <div class="kpi-delta delta-up">▲ +1.2% vs mês anterior</div>
+            <div class="kpi-value">0%</div>
+            <div class="kpi-delta">Sem dados</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-icon" style="background:var(--red-dim)">💳</div>
             <div class="kpi-label">Ticket Médio</div>
-            <div class="kpi-value">R$ 37,57</div>
-            <div class="kpi-delta delta-down">▼ -3% vs mês anterior</div>
+            <div class="kpi-value">R$ 0,00</div>
+            <div class="kpi-delta">Sem dados</div>
           </div>
         </div>
 
@@ -224,13 +224,13 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
           <div class="card" style="background:linear-gradient(135deg,rgba(34,197,94,0.08),transparent);border-color:rgba(34,197,94,0.2)">
             <div class="text-sm text-muted mb-8">Saldo disponível para saque</div>
-            <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--green);margin-bottom:16px">R$ 14.380,00</div>
+            <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--green);margin-bottom:16px">R$ 0,00</div>
             <button class="btn btn-primary" onclick="openModal('modal-saque')">Solicitar saque</button>
           </div>
           <div class="card" style="display:flex;flex-direction:column;gap:6px">
             <div class="text-sm text-muted">Último saque</div>
-            <div style="font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-0.04em">R$ 5.000,00</div>
-            <div class="text-sm" style="color:var(--green)">Processado · 25/03/2025</div>
+            <div style="font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-0.04em">R$ 0,00</div>
+            <div class="text-sm text-muted">Nenhum saque realizado</div>
           </div>
         </div>
 
@@ -517,29 +517,51 @@ function switchTab(btn) {
   }
 }
 
-/* ── MOCK DATA ── */
-const MY_TXNS = generateTxns(20);
-const QR_SVG = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="qr-mock">
-  <rect width="100" height="100" fill="white"/>
-  <rect x="10" y="10" width="30" height="30" fill="none" stroke="black" stroke-width="4"/>
-  <rect x="15" y="15" width="20" height="20" fill="black"/>
-  <rect x="60" y="10" width="30" height="30" fill="none" stroke="black" stroke-width="4"/>
-  <rect x="65" y="15" width="20" height="20" fill="black"/>
-  <rect x="10" y="60" width="30" height="30" fill="none" stroke="black" stroke-width="4"/>
-  <rect x="15" y="65" width="20" height="20" fill="black"/>
-  <rect x="45" y="10" width="4" height="4" fill="black"/><rect x="52" y="10" width="4" height="4" fill="black"/>
-  <rect x="45" y="17" width="4" height="4" fill="black"/><rect x="52" y="24" width="4" height="4" fill="black"/>
-  <rect x="60" y="45" width="4" height="4" fill="black"/><rect x="67" y="52" width="4" height="4" fill="black"/>
-  <rect x="74" y="45" width="4" height="4" fill="black"/><rect x="81" y="52" width="4" height="4" fill="black"/>
-  <rect x="60" y="59" width="4" height="4" fill="black"/><rect x="74" y="66" width="4" height="4" fill="black"/>
-  <rect x="67" y="73" width="4" height="4" fill="black"/><rect x="81" y="80" width="4" height="4" fill="black"/>
-</svg>`;
+/* ── DATA LOADING ── */
+async function loadData() {
+  try {
+    const [pRes, tRes] = await Promise.all([
+      fetch('/api/products'),
+      fetch('/api/transactions')
+    ]);
+    const prods = await pRes.json();
+    const txns = await tRes.json();
 
-let PRODUCTS = [
-  { id:'prod-001', nome:'Curso de Marketing Digital', desc:'Aprenda do zero ao avançado', valor:297, tipo:'Pagamento único', vendas:142, total:42174, emoji:'🎓' },
-  { id:'prod-002', nome:'Mentoria Mensal', desc:'Acompanhamento individual personalizado', valor:497, tipo:'Assinatura mensal', vendas:38, total:18886, emoji:'🚀' },
-  { id:'prod-003', nome:'Pack de Templates', desc:'100 templates premium para redes sociais', valor:97, tipo:'Pagamento único', vendas:89, total:8633, emoji:'🎨' },
-];
+    // Filtra transações deste vendedor (usando email da sessão como vínculo)
+    const user = Session.get();
+    const myTxns = txns.filter(t => t.vendedor === user.email);
+
+    MY_TXNS.length = 0;
+    MY_TXNS.push(...myTxns);
+
+    PRODUCTS.length = 0;
+    PRODUCTS.push(...prods);
+
+    // Atualiza KPIs
+    const totalRevenue = myTxns.filter(t => t.status === 'pago').reduce((acc, t) => acc + t.valor, 0);
+    const approvedCount = myTxns.filter(t => t.status === 'pago').length;
+    const approvalRate = myTxns.length > 0 ? (approvedCount / myTxns.length * 100).toFixed(1) : 0;
+    const avgTicket = approvedCount > 0 ? totalRevenue / approvedCount : 0;
+
+    document.querySelector('.kpi-card:nth-child(1) .kpi-value').textContent = fmt(totalRevenue);
+    document.querySelector('.kpi-card:nth-child(2) .kpi-value').textContent = myTxns.length;
+    document.querySelector('.kpi-card:nth-child(3) .kpi-value').textContent = approvalRate + '%';
+    document.querySelector('.kpi-card:nth-child(4) .kpi-value').textContent = fmt(avgTicket);
+
+    document.querySelector('#page-saldo .kpi-value, #page-saldo div[style*="36px"]').textContent = fmt(totalRevenue);
+
+    renderMiniTxns();
+    renderTxns();
+    renderProducts();
+    initCharts();
+  } catch (err) {
+    console.error('Falha ao carregar dados:', err);
+  }
+}
+
+/* ── MOCK DATA (Limpo para Produção) ── */
+const MY_TXNS = [];
+let PRODUCTS = [];
 
 /* ── RENDER: MINI TXNS ── */
 function renderMiniTxns() {
@@ -779,24 +801,40 @@ function renderProducts() {
     </div>`).join('');
 }
 
-function createProduct() {
+async function createProduct() {
   const nome  = document.getElementById('p-nome').value.trim();
-  const valor = parseFloat(document.getElementById('p-valor').value.replace(',','.'));
+  const valor = parseFloat(document.getElementById('p-valor').value.replace(',','.').replace('R$','').trim());
   const tipo  = document.getElementById('p-tipo').value;
   const desc  = document.getElementById('p-desc').value.trim();
   const foto  = document.getElementById('p-foto').value.trim();
   const emoji = ['🎓','🚀','🎨','💡','🔥','⭐'][Math.floor(Math.random()*6)];
   if (!nome || !valor) { showToast('Preencha nome e valor','error'); return; }
-  PRODUCTS.unshift({ id:'prod-' + randomId(''), nome, desc, valor, tipo, foto, vendas:0, total:0, emoji });
-  renderProducts();
-  closeModal('modal-produto');
-  showToast(`Produto "${nome}" criado!`, 'success');
+  
+  const newProd = { id:'prod-' + randomId(''), nome, desc, valor, tipo, foto, vendas:0, total:0, emoji };
+  
+  try {
+    await fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newProd)
+    });
+    showToast(`Produto "${nome}" criado!`, 'success');
+    closeModal('modal-produto');
+    loadData();
+  } catch (err) {
+    showToast('Erro ao salvar produto', 'error');
+  }
 }
 
-function deleteProduct(id) {
-  PRODUCTS = PRODUCTS.filter(p => p.id !== id);
-  renderProducts();
-  showToast('Produto removido', 'info');
+async function deleteProduct(id) {
+  if (!confirm('Deseja remover este produto?')) return;
+  try {
+    await fetch('/api/products/' + id, { method: 'DELETE' });
+    showToast('Produto removido', 'info');
+    loadData();
+  } catch (err) {
+    showToast('Erro ao remover produto', 'error');
+  }
 }
 
 function requestWithdraw() {
@@ -835,8 +873,12 @@ function initCharts() {
     if (inst) inst.destroy();
   });
 
-  const days = ['19/03','20/03','21/03','22/03','23/03','24/03','25/03'];
-  const revenue = [4800, 5200, 3900, 7100, 6400, 8200, 7600];
+  const days = Array.from({length:7}, (_,i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6-i));
+    return d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+  });
+  const revenue = [0, 0, 0, 0, 0, 0, 0];
 
   const revCtx = document.getElementById('revenue-chart').getContext('2d');
   const grad = revCtx.createLinearGradient(0, 0, 0, 200);
@@ -849,7 +891,7 @@ function initCharts() {
 
   createDoughnutChart(document.getElementById('status-chart'),
     ['Aprovado','Expirado','Cancelado','Aguardando'],
-    [77,13,6,4],
+    [0,0,0,0],
     ['#30d158','#555d72','#ff453a','#ffd60a']
   );
 }
@@ -860,6 +902,7 @@ renderTxns();
 renderProducts();
 initCharts();
 initAdquirentes();
+loadData();
 </script>
 </body>
 </html>
