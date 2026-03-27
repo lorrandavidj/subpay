@@ -2,7 +2,7 @@ import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import efipay from '../providers/efipay.js';
+import * as efipay from '../providers/efipay.js';
 
 const router = express.Router();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
