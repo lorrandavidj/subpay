@@ -1128,9 +1128,26 @@ function initAdquirentes() {
     .catch(() => {});
 }
 
-function testProvider(provider) {
+async function testProvider(provider) {
   const names = { efipay:'EfiPay', mercadopago:'Mercado Pago', stone:'Stone' };
   showToast(`Testando conexão com ${names[provider]}...`, 'info');
+  
+  if (provider === 'efipay') {
+    try {
+      const res = await fetch((window.PAYZAP_API_URL || '') + '/api/config/test-efipay', { method: 'POST' });
+      const data = await res.json();
+      if (data.ok) {
+        showToast(data.message, 'success');
+      } else {
+        showToast(data.message, 'error');
+        console.error('[EfiPay Test Error]', data.detail);
+      }
+    } catch (err) {
+      showToast('Erro de rede ao testar EfiPay', 'error');
+    }
+    return;
+  }
+
   if (typeof Gateway === 'undefined') { showToast('Gateway não disponível', 'error'); return; }
   Gateway.health()
     .then(h => showToast(h.ok ? `${names[provider]} respondeu — ${h.env}` : `${names[provider]}: resposta inesperada`, h.ok ? 'success' : 'warning'))

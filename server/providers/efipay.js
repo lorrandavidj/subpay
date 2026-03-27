@@ -7,13 +7,21 @@
 import https from 'https';
 import fs from 'fs';
 import axios from 'axios';
+import path from 'path';
 import { cfg } from '../config.js';
 
 // ── Token + Agent cache ───────────────────────────────────────────────────────
 let _token = null;
-let _tokenExpiresAt = 0;
+let _tokenExpires = 0;
 let _tokenPromise = null; // evita race condition em requisições paralelas
 let _agent = null;        // reutiliza https.Agent (evita re-leitura do cert)
+
+export function resetAgent() {
+  console.log('[EfiPay] Resetando agente de conexão (configuração alterada)');
+  _agent = null;
+  _token = null;
+  _tokenExpires = 0;
+}
 
 function buildAgent() {
   if (_agent) return _agent;
@@ -24,24 +32,31 @@ function buildAgent() {
     console.log('[EfiPay] Usando certificado de variável de ambiente (base64)');
     pfx = Buffer.from(c.certBase64, 'base64');
   } else {
-    if (!fs.existsSync(c.certPath)) {
-      throw new Error(`[EfiPay] Certificado não encontrado: ${c.certPath}. Configure via SuperAdmin ou use EFIPAY_CERT_BASE64.`);
+    const fullPath = path.resolve(c.certPath);
+    console.log(`[EfiPay] Procurando certificado em: ${fullPath}`);
+    if (!fs.existsSync(fullPath)) {
+      const dirContents = fs.existsSync(path.dirname(fullPath)) ? fs.readdirSync(path.dirname(fullPath)) : 'DIRETÓRIO NÃO EXISTE';
+      throw new Error(`[EfiPay] Certificado não encontrado em ${fullPath}. Arquivos no diretório: ${dirContents}`);
     }
-    pfx = fs.readFileSync(c.certPath);
+    pfx = fs.readFileSync(fullPath);
+    console.log(`[EfiPay] Certificado carregado (${pfx.length} bytes)`);
   }
 
   _agent = new https.Agent({ pfx, passphrase: c.certPass, rejectUnauthorized: true });
   return _agent;
 }
 
-async function getToken() {
-  if (_token && Date.now() < _tokenExpiresAt) return _token;
+async function getAccessToken() {
+  const c = cfg.efipay;
+  const now = Date.now();
+  if (_token && now < _tokenExpires) return _token;
+
+  console.log(`[EfiPay] Solicitando novo token OAuth2 (${c.sandbox ? 'SANDBOX' : 'PRODUÇÃO'})...`);
+  const agent = buildAgent();
   // Coalesce: se já há uma renovação em andamento, aguarda ela
   if (_tokenPromise) return _tokenPromise;
 
   _tokenPromise = (async () => {
-    const c = cfg.efipay;
-    const agent = buildAgent();
     const credentials = Buffer.from(`${c.clientId}:${c.clientSecret}`).toString('base64');
 
     const { data } = await axios.post(
@@ -57,7 +72,7 @@ async function getToken() {
     );
 
     _token = data.access_token;
-    _tokenExpiresAt = Date.now() + (data.expires_in - 60) * 1000;
+    _tokenExpires = Date.now() + (data.expires_in - 60) * 1000;
     _tokenPromise = null;
     return _token;
   })();

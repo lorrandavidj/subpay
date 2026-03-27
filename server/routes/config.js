@@ -2,6 +2,7 @@ import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import efipay from '../providers/efipay.js';
 
 const router = express.Router();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -95,11 +96,29 @@ router.post('/', async (req, res) => {
 
     await fs.writeFile(envPath, lines.join('\n'), 'utf8');
     
+    // Reseta o cache do provedor para que as novas chaves/certificado sejam lidos
+    efipay.resetAgent();
+    
     console.log('[Config] .env atualizado com sucesso');
     res.json({ ok: true, message: 'Configuração salva com sucesso. Reinicie o servidor.' });
   } catch (err) {
     console.error('[Config] Erro ao salvar:', err);
     res.status(500).json({ ok: false, message: 'Erro ao salvar configuração: ' + err.message });
+  }
+});
+
+router.post('/test-efipay', async (req, res) => {
+  try {
+    console.log('[Config/Test] Efetuando teste de conexão EfiPay...');
+    const result = await efipay.getAccessToken(); // Força renovação/teste
+    res.json({ ok: true, message: 'Sucesso: Token OAuth2 obtido com sucesso da Efi Pay.', detail: result });
+  } catch (err) {
+    console.error('[Config/Test] Falha no teste EfiPay:', err.message);
+    res.status(500).json({ 
+      ok: false, 
+      message: 'Falha na conexão com Efi Pay: ' + err.message,
+      detail: err.detail || 'Verifique se o Client ID, Secret e Certificado estão corretos.'
+    });
   }
 });
 
