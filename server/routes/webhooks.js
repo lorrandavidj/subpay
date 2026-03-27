@@ -12,10 +12,10 @@ const router = Router();
 // Map: chargeId → status
 export const chargeStatusCache = new Map();
 
-// ── POST /webhook/efipay ──────────────────────────────────────────────────────
-// EfiPay envia via mTLS — a validação é feita pelo servidor web (nginx/caddy).
-// Este endpoint processa o payload.
-router.post('/efipay', async (req, res) => {
+// EfiPay envia via mTLS (padrão Banco Central).
+// A Efi adiciona automaticamente '/pix' ao final da URL de webhook, a menos que se use o parâmetro ?ignorar=
+// Aceitamos ambos os caminhos para maior compatibilidade.
+const processEfiWebhook = async (req, res) => {
   try {
     const pixList = efipay.validateWebhook(req.body);
 
@@ -24,35 +24,27 @@ router.post('/efipay', async (req, res) => {
         txid:   pix.txid,
         valor:  pix.valor,
         e2eId:  pix.endToEndId,
-        horario: pix.horario,
       });
-      // Atualiza cache de status
-      if (pix.txid) {
-        chargeStatusCache.set(pix.txid, {
-          status: 'paid',
-          paidAt: pix.horario,
-          e2eId:  pix.endToEndId,
-          amount: parseFloat(pix.valor),
-          pagador: pix.gnExtras?.pagador,
-        });
 
-        // Persistir no banco
-        console.log('[webhook] EfiPay confirmed:', pix.txid);
+      if (pix.txid) {
+        // Atualiza cache/persiste
         await db.saveTransaction({
           id: pix.txid,
           status: 'pago',
-          pagamento_em: pix.horario,
+          pagamento_em: pix.horario || new Date().toISOString(),
+          detalhes: JSON.stringify({ e2eId: pix.endToEndId, valor: pix.valor })
         });
       }
-      // TODO: disparar fulfillment, notificar vendedor etc.
     }
-
     res.status(200).send('OK');
   } catch (err) {
     console.error('[webhook/efipay] erro:', err.message);
-    res.status(400).json({ error: err.message });
+    res.status(400).send('Bad Request');
   }
-});
+};
+
+router.post('/efipay', processEfiWebhook);
+router.post('/efipay/pix', processEfiWebhook);
 
 // ── POST /webhook/mercadopago ─────────────────────────────────────────────────
 // MP envia um evento leve; buscamos o pagamento completo via API.
