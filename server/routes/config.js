@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import * as efipay from '../providers/efipay.js';
+import { reloadConfig } from '../config.js';
 
 const router = express.Router();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -96,7 +97,8 @@ router.post('/', async (req, res) => {
 
     await fs.writeFile(envPath, lines.join('\n'), 'utf8');
     
-    // Reseta o cache do provedor para que as novas chaves/certificado sejam lidos
+    // Recarrega o process.env e reseta o cache do provedor
+    reloadConfig();
     efipay.resetAgent();
     
     console.log('[Config] .env atualizado com sucesso');

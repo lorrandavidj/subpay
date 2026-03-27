@@ -6,6 +6,11 @@ import dotenv from 'dotenv';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
+export function reloadConfig() {
+  console.log('[Config] Recarregando .env...');
+  dotenv.config({ path: path.join(__dirname, '../.env'), override: true });
+}
+
 export const PROVIDER = process.env.PAYMENT_PROVIDER || 'efipay';
 
 export const cfg = {
@@ -14,13 +19,13 @@ export const cfg = {
   publicUrl: process.env.PUBLIC_URL || 'http://localhost:3000',
 
   efipay: {
-    clientId:     process.env.EFIPAY_CLIENT_ID,
-    clientSecret: process.env.EFIPAY_CLIENT_SECRET,
-    pixKey:       process.env.EFIPAY_PIX_KEY,
-    certPath:     process.env.EFIPAY_CERT_PATH || './certs/efipay.p12',
-    certBase64:   process.env.EFIPAY_CERT_BASE64 || '',
-    certPass:      process.env.EFIPAY_CERT_PASS || '',
-    sandbox:      process.env.EFIPAY_ENV !== 'production',
+    get clientId()     { return process.env.EFIPAY_CLIENT_ID; },
+    get clientSecret() { return process.env.EFIPAY_CLIENT_SECRET; },
+    get pixKey()       { return process.env.EFIPAY_PIX_KEY; },
+    get certPath()     { return process.env.EFIPAY_CERT_PATH || './certs/efipay.p12'; },
+    get certBase64()   { return process.env.EFIPAY_CERT_BASE64 || ''; },
+    get certPass()     { return process.env.EFIPAY_CERT_PASS || ''; },
+    get sandbox()      { return process.env.EFIPAY_ENV !== 'production'; },
     baseUrl() {
       return this.sandbox
         ? 'https://pix-h.api.efipay.com.br'

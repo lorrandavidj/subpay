@@ -1163,7 +1163,7 @@ function checkGatewayHealth() {
       el.innerHTML = `<span style="color:var(--green);font-weight:600">● Online</span> &nbsp;·&nbsp; Provedor: <strong>${h.provider}</strong> &nbsp;·&nbsp; Ambiente: <strong>${h.env}</strong> &nbsp;·&nbsp; <span class="text-muted">${h.ts}</span>`;
     })
     .catch(() => {
-      el.innerHTML = `<span style="color:var(--red);font-weight:600">● Offline</span> &nbsp;·&nbsp; <span class="text-muted">Servidor não responde em ${window.PAYZAP_API_URL || 'http://localhost:3000'}</span>`;
+      el.innerHTML = `<span style="color:var(--red);font-weight:600">● Offline</span> &nbsp;·&nbsp; <span class="text-muted">Servidor não responde em ${window.PAYZAP_API_URL || window.location.origin}</span>`;
     });
 }
 

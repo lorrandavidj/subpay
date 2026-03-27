@@ -6,7 +6,7 @@
 const Gateway = (() => {
 
   // URL base do servidor. Em produção, aponte para o domínio real.
-  const BASE = window.PAYZAP_API_URL || 'http://localhost:3000';
+  const BASE = window.PAYZAP_API_URL || window.location.origin;
 
   // Token de autenticação para rotas protegidas (carregado após login)
   let _apiToken = localStorage.getItem('pz_api_token') || null;
