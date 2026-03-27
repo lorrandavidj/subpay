@@ -720,7 +720,7 @@
       </div>
       <div class="input-group">
         <label class="input-label">Caminho do Certificado P12</label>
-        <input id="sa-efi-cert-path" class="input" type="text" placeholder="./certs/efipay.p12"/>
+        <input id="sa-efi-cert-path" class="input" type="text" value="./certs/efipay.p12" placeholder="./certs/efipay.p12"/>
       </div>
       <div class="input-group">
         <label class="input-label">Senha do Certificado</label>
@@ -1178,7 +1178,10 @@ async function loadConfig() {
           if (el.type === 'radio') {
             if (el.value === val) el.checked = true;
           } else {
-            el.value = val;
+            // Only update el.value if val is not empty
+            if (val !== '' && val !== null && val !== undefined) {
+              el.value = val;
+            }
           }
         }
       }
